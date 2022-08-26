@@ -1,19 +1,27 @@
 package com.in2l.domain.member.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.in2l.domain.member.domain.GenderType;
 import com.in2l.domain.member.domain.Member;
+import com.in2l.domain.member.dto.request.MemberRequest;
+import com.in2l.domain.member.exception.MemberNotFound;
 import com.in2l.domain.member.repository.MemberRepository;
+import java.time.LocalDateTime;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -35,16 +43,26 @@ class MemberControllerTest {
     memberRepository.deleteAll();;
   }
 
+  Long testId = 8898L;
+  String testEmail = "test@gmail.com";
+  String testPassword = "Password123!@#";
+  String testMembername = "고냥인";
+  String testPhoneNumber = "0108811234";
+  GenderType testGender = GenderType.MALE;
+  LocalDateTime testBirthDay = LocalDateTime.now();
+  String testAddress = "송파구";
+  String testProfileImage = "/path/image.jpg";
+
   @Test
-  @DisplayName("/정상인지 확인.")
-  void test() throws Exception{
+  @DisplayName("1명 get")
+  void Test_get1Member() throws Exception{
 
     //Given
     Member member = Member.builder()
-        .member_id(1L)
-        .email("test@gmail.com")
-        .password("Password123!@#")
-        .memberName("고냥인")
+        .member_id(testId)
+        .email(testEmail)
+        .password(testPassword)
+        .memberName(testMembername)
         .build();
 
     String json = objectMapper.writeValueAsString(member);
@@ -52,7 +70,7 @@ class MemberControllerTest {
     memberRepository.save(member);
 
     //expected
-    mockMvc.perform(get("/member/1")
+    mockMvc.perform(get("/v1/member/1")
     .contentType(MediaType.APPLICATION_JSON)
     .contentType(json))
         .andExpect(status().isOk())
@@ -61,7 +79,81 @@ class MemberControllerTest {
 //import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 //import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
   }
-}
+
+  @Test
+  @DisplayName("1명 삭제 확인.")
+  void Test_delete1Member() throws Exception{ //TODO: beforeeach 가 왜 안먹지?? DB초기화가 안됨.
+
+    //Given
+    Member member = Member.builder()
+        .member_id(testId)
+        .email(testEmail)
+        .password(testPassword)
+        .memberName(testMembername)
+        .build();
+
+    Member member1 = memberRepository.save(member);
+
+    //when
+    mockMvc.perform(delete("/v1/member/{memberId}", member1.getMember_id())
+        .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andDo(print());
+
+    //then
+    //TODO: 에러메세지 "message":"사용자가 삭제되었습니다." 가 잘 출력되는지 확인 테케가 있어야함.
+    Assertions.assertEquals(member1.getMember_id(), 1L);
+
+//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+  }
+
+  @Test
+  @DisplayName("1명 업데이트 확인")
+  void Test_patch1Member() throws Exception {
+    //Given
+    Member member = Member.builder()
+        .member_id(testId)
+        .email(testEmail)
+        .password(testPassword)
+        .memberName(testMembername)
+        .build();
+
+    Member member1 = memberRepository.save(member);
+
+    //when
+    MemberRequest memberRequest = MemberRequest.builder()
+        .email("updatedEmail@gmail.com")
+        .password(testPassword)
+        .memberName("updated고냥인")
+        .address("updated송파구")
+        .profileImage("updated/path/")
+        .birthDay(LocalDateTime.now())
+        .gender(GenderType.MALE)
+        .phoneNumber("updated010812345")
+        .build();
+
+    mockMvc.perform(patch("/v1/member/{memberId}", member1.getMember_id())
+      .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(memberRequest)))
+        .andExpect(status().isOk());
+
+//        objectMapper.writeValueAsString(data);
+
+//        .content(objectMapper.toJson(MemberRequest))
+//        .content(objectMapper.writeValueAsString(MemberRequest)))
+//        .andExpect(HttpStatus.OK);
+
+    //then
+
+
+
+
+  }
+
+
+
+  }
 
 //
 //

@@ -35,7 +35,6 @@ class MemberServiceTest {
    * profileImage :String
    */
 
-
   Long testId = 1L;
   String testEmail = "test@gmail.com";
   String testPassword = "Password123!@#";
@@ -63,7 +62,7 @@ class MemberServiceTest {
     Long member_id = member.getMember_id();
 
     //when
-    Member member1 = memberService.getMember(member_id);
+    Member member1 = memberService.getMemberService(member_id);
 
     //then
     Assertions.assertEquals(testId, member1.getMember_id());

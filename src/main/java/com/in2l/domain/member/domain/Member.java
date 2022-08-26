@@ -1,19 +1,13 @@
 package com.in2l.domain.member.domain;
 
-import com.in2l.domain.member.exception.InvalidMemberRequest;
-import com.in2l.global.common.domain.BaseTimeEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,7 +32,6 @@ public class Member{
   @Id
   @Column(name = "member_id")
   @GeneratedValue
-//  @NotBlank
   private Long member_id;
 
   @NotBlank
@@ -73,6 +66,25 @@ public class Member{
     this.birthDay = birthDay;
     this.address = address;
     this.profileImage = profileImage;
+  }
+
+  public MemberEditor.MemberEditorBuilder edit(){
+    //setter대신 씀
+    // public edit(String email, String password....){} 뭐 이런게 일반적이지만,
+    // MemberEditor라는 도메인에 builder를 새로 선언해서
+    // 여기다 변경될 코드를 선언해서 씀.
+
+    MemberEditor.MemberEditorBuilder builder = MemberEditor.builder()
+        .email(email)
+        .password(password)
+        .memberName(memberName)
+        .phoneNumber(phoneNumber)
+        .gender(gender)
+        .birthDay(birthDay)
+        .address(address)
+        .profileImage(profileImage);
+
+    return builder; //빌더 자체를 보냄.
   }
 
   //validation은 MemberRequest 에서
