@@ -25,12 +25,12 @@ public class MemberController {
   private final MemberService memberService;
 
   @GetMapping("/{memberId}")
-  public Member getMember(@PathVariable Long memberId) {
-
-    return memberService.getMemberService(memberId);
+  public Member getMember(@PathVariable Long memberId) {  //TODO: 이거 MemberResponse를 해야하냐?
+                                                  //TODO: memberId Valid가 필요 할거 같다?
+    return memberService.selectMemberService(memberId);
   }
 
-  @PostMapping("/{memberId}")
+  @PostMapping("")
   public MemberResponse postMember(@RequestBody @Valid MemberRequest memberRequest) {
 
     return memberService.createMemberService(memberRequest);

@@ -12,7 +12,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
 //  public List<Member> getMemberList(){
 //
 //  }
-  //TODO: createMember시 validation 필요
+  //TODO: createMember시 validation 필요?
 
 }
 

@@ -1,5 +1,6 @@
 package com.in2l.domain.member.domain;
 
+import com.in2l.global.common.domain.BaseTimeEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +19,7 @@ import lombok.NoArgsConstructor;
 //@NoArgsConstructor(access = AccessLevel.PUBLIC)  //Entity는 기본 생성자를 넣어줘야 한다? 그게 먼 소리지?
 @NoArgsConstructor
 @Table(name = "member")
-public class Member{
+public class Member extends BaseTimeEntity {
 
   /**
    * @email            :String
@@ -54,10 +57,9 @@ public class Member{
   private String profileImage;
 
   @Builder
-  public Member(Long member_id, @NotBlank String email,
+  public Member(@NotBlank String email,
       @NotBlank String password, @NotBlank String memberName, String phoneNumber,
       GenderType gender, LocalDateTime birthDay, String address, String profileImage) {
-    this.member_id = member_id;
     this.email = email;
     this.password = password;
     this.memberName = memberName;

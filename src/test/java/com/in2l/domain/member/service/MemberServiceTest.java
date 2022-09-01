@@ -35,7 +35,6 @@ class MemberServiceTest {
    * profileImage :String
    */
 
-  Long testId = 1L;
   String testEmail = "test@gmail.com";
   String testPassword = "Password123!@#";
   String testMembername = "고냥인";
@@ -46,27 +45,24 @@ class MemberServiceTest {
   String testProfileImage = "/path/image.jpg";
 
   @Test
-  @DisplayName("member 1명 조회")
+  @DisplayName("member 1명 조회")    //TODO: 이건 솔까 뭔가 이상한 테스트케이스임.
   void Test_1MemberSearch(){
     //given
-
     Member member = Member.builder()
-        .member_id(testId)
         .email(testEmail)
         .memberName(testMembername)
         .password(testPassword)
         .build();
 
-    memberRepository.save(member);
+    Member savedMember = memberRepository.save(member);
 
-    Long member_id = member.getMember_id();
+//    Long member_id = member.getMember_id();
 
     //when
-    Member member1 = memberService.getMemberService(member_id);
+    Member selectedMember = memberService.selectMemberService(savedMember.getMember_id());
 
     //then
-    Assertions.assertEquals(testId, member1.getMember_id());
-    Assertions.assertEquals(testEmail, member1.getEmail());
+    Assertions.assertEquals(selectedMember.getMember_id(), savedMember.getMember_id());
   }
 
   @Test
@@ -86,7 +82,7 @@ class MemberServiceTest {
         .build();
 
     //when
-    MemberResponse member1 = this.memberService.createMemberService(memberRequest);
+    MemberResponse member1 = memberService.createMemberService(memberRequest);
 
     //then
     Assertions.assertNotNull(member1);

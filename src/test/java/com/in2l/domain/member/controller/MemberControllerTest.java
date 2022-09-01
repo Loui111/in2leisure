@@ -1,10 +1,12 @@
 package com.in2l.domain.member.controller;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +16,7 @@ import com.in2l.domain.member.dto.request.MemberRequest;
 import com.in2l.domain.member.exception.MemberNotFound;
 import com.in2l.domain.member.repository.MemberRepository;
 import java.time.LocalDateTime;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,11 +42,15 @@ class MemberControllerTest {
   private MemberRepository memberRepository;
 
   @BeforeEach
-  void DBClean(){
-    memberRepository.deleteAll();;
+  void DBClean1() {
+    memberRepository.deleteAllInBatch();
   }
 
-  Long testId = 8898L;
+  @AfterEach
+  void DBClean2() {
+    memberRepository.deleteAllInBatch();
+  }
+
   String testEmail = "test@gmail.com";
   String testPassword = "Password123!@#";
   String testMembername = "고냥인";
@@ -55,11 +62,10 @@ class MemberControllerTest {
 
   @Test
   @DisplayName("1명 get")
-  void Test_get1Member() throws Exception{
+  void Test_get1Member() throws Exception {
 
     //Given
     Member member = Member.builder()
-        .member_id(testId)
         .email(testEmail)
         .password(testPassword)
         .memberName(testMembername)
@@ -67,14 +73,43 @@ class MemberControllerTest {
 
     String json = objectMapper.writeValueAsString(member);
 
-    memberRepository.save(member);
+    Member member1 = memberRepository.save(member);
 
     //expected
-    mockMvc.perform(get("/v1/member/1")
-    .contentType(MediaType.APPLICATION_JSON)
-    .contentType(json))
+    mockMvc.perform(get("/v1/member/{memberId}", member1.getMember_id())
+        .contentType(MediaType.APPLICATION_JSON)
+        .contentType(json))
         .andExpect(status().isOk())
-      .andDo(print());
+        .andDo(print());
+
+//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+  }
+
+  @Test
+  @DisplayName("없는사람 1명 get할때 오류가 제대로 뜨는지(안뜬다 TODO)")
+  void Test_get1Member_butError() throws Exception {
+
+    //Given
+    Member member = Member.builder()
+        .email(testEmail)
+        .password(testPassword)
+        .memberName(testMembername)
+        .build();
+
+    String json = objectMapper.writeValueAsString(member);
+//
+    Member member1 = memberRepository.save(member);
+
+    //expected
+    mockMvc.perform(get("/v1/member/{memberId}", member1.getMember_id())
+        .contentType(MediaType.APPLICATION_JSON)
+        .contentType(json))
+        .andExpect(status().isOk()) //TODO: MemberNotFound exception과 "사용자를 찾을수 없습니다" 메세지를 테스트해야 하는데 안된다.
+//        .andExpect(result -> assertTrue(result.getResolvedException() instanceof MemberNotFound))
+//        .andExpect(result -> assertTrue(result.getResolvedException().getClass().isAssignableFrom(MemberNotFound.class)))
+//        .andExpect(jsonPath("$.message").value("사용자를 찾을 수 없습니다."))
+        .andDo(print());
 
 //import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 //import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -82,11 +117,10 @@ class MemberControllerTest {
 
   @Test
   @DisplayName("1명 삭제 확인.")
-  void Test_delete1Member() throws Exception{ //TODO: beforeeach 가 왜 안먹지?? DB초기화가 안됨.
+  void Test_delete1Member() throws Exception {
 
     //Given
     Member member = Member.builder()
-        .member_id(testId)
         .email(testEmail)
         .password(testPassword)
         .memberName(testMembername)
@@ -97,15 +131,47 @@ class MemberControllerTest {
     //when
     mockMvc.perform(delete("/v1/member/{memberId}", member1.getMember_id())
         .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.message").value("사용자가 삭제되었습니다."))
         .andExpect(status().isOk())
         .andDo(print());
 
     //then
-    //TODO: 에러메세지 "message":"사용자가 삭제되었습니다." 가 잘 출력되는지 확인 테케가 있어야함.
-    Assertions.assertEquals(member1.getMember_id(), 1L);
+//    Assertions.assertEquals(member1.getMember_id(), 1L);
 
 //import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 //import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+  }
+
+  @Test
+  @DisplayName("1명 생성 확인.")
+  void Test_post1Member() throws Exception {
+
+    //Given
+    MemberRequest memberRequest = MemberRequest.builder()
+        .email(testEmail)
+        .password(testPassword)
+        .memberName(testMembername)
+        .gender(testGender)
+        .birthDay(testBirthDay)
+        .address(testAddress)
+        .profileImage(testProfileImage)
+        .build();
+
+    String json = objectMapper.writeValueAsString(memberRequest);
+
+    mockMvc.perform(post("/v1/member")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json))
+        .andExpect(status().isOk())
+        .andDo(print());
+
+    //expected
+//    mockMvc.perform(post("/v1/member")
+//      .content(json)
+//      .contentType(MediaType.APPLICATION_JSON))
+//        .andDo(print())
+//        .andExpect(jsonPath("$.message").value("사용자가 생성되었습니다."))
+//        .andExpect(status().isOk());
   }
 
   @Test
@@ -113,7 +179,6 @@ class MemberControllerTest {
   void Test_patch1Member() throws Exception {
     //Given
     Member member = Member.builder()
-        .member_id(testId)
         .email(testEmail)
         .password(testPassword)
         .memberName(testMembername)

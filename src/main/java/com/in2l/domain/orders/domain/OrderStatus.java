@@ -1,4 +1,4 @@
-package com.in2l.domain.order.domain;
+package com.in2l.domain.orders.domain;
 
 public enum OrderStatus {
 

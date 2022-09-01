@@ -24,7 +24,7 @@ public class MemberService {
   private String MESSAGE_update = "사용자가 갱신되었습니다.";  //TODO: 이거 글로벌 messages로 전환해야함.
   private String MESSAGE_create = "사용자가 생성되었습니다.";  //TODO: 이거 글로벌 messages로 전환해야함.
 
-  public Member getMemberService(Long memberId) {
+  public Member selectMemberService(Long memberId) {
 
     Member member = memberRepository.findById(memberId)
         .orElseThrow(()->new MemberNotFound());
@@ -64,9 +64,8 @@ public class MemberService {
     Member originMember = memberRepository.findById(memberId)
         .orElseThrow( ()-> new MemberNotFound());
 
-    //TODO: 이건 내가 원하는 형태가 아님.
-    Member newMember = Member.builder()
-        .member_id(memberId)
+    //TODO: 이건 내가 원하는 형태가 아님. 향후에 builder로 update시키는 거 분석 필요.
+    Member tempMemberBuilder = Member.builder()
         .email(memberRequest.getEmail())
         .password(memberRequest.getPassword())
         .memberName(memberRequest.getMemberName())
@@ -77,7 +76,7 @@ public class MemberService {
         .profileImage(memberRequest.getProfileImage())
         .build();
 
-    Member updatedMember = memberRepository.save(newMember);
+    Member updatedMember = memberRepository.save(tempMemberBuilder);
 
     MemberResponse memberResponse = MemberResponse.builder()
         .memberName(updatedMember.getMemberName())
