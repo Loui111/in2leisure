@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -16,15 +17,15 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-//@NoArgsConstructor(access = AccessLevel.PUBLIC)  //Entity는 기본 생성자를 넣어줘야 한다? 그게 먼 소리지?
-@NoArgsConstructor
+//@NoArgsConstructor(access = AccessLevel.PUBLIC)  //Entity는 기본 생성자를 넣어줘야 한다?
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member")
 public class Member extends BaseTimeEntity {
 
   /**
-   * @email            :String
-   * @password     :String
-   * @memberName    :String
+   * email            :String
+   * password     :String
+   * memberName    :String
    * phoneNumber  :String? Int?
    * gender         :ENUM
    * birthDay        :DateTime
@@ -34,7 +35,7 @@ public class Member extends BaseTimeEntity {
 
   @Id
   @Column(name = "member_id")
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long member_id;
 
   @NotBlank

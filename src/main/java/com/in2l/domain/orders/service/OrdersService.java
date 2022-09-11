@@ -1,6 +1,7 @@
 package com.in2l.domain.orders.service;
 
 import com.in2l.domain.orders.domain.Orders;
+import com.in2l.domain.orders.domain.OrdersProduct;
 import com.in2l.domain.orders.dto.request.OrdersRequest;
 import com.in2l.domain.orders.dto.response.OrdersResponse;
 import com.in2l.domain.orders.exception.OrderNotFound;
@@ -8,11 +9,15 @@ import com.in2l.domain.orders.repository.OrdersRepository;
 import com.in2l.domain.product.domain.Product;
 import com.in2l.domain.product.domain.Product.ProductBuilder;
 import com.in2l.domain.product.dto.request.ProductRequestDto;
+import com.in2l.global.common.domain.Currency;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -68,19 +73,59 @@ public class OrdersService {
      * soldCount        :Long
      */
 
+
+
+//    private Long product_id;
+//
+//    private String productName;
+//
+//    private String productDesc;
+//
+//    private Long amount;
+//
+//    private Long originPrice;
+//
+//    private Long discountPrice;
+//
+//    @Enumerated(EnumType.STRING)
+//    private Currency currency;
+
+
     for( ProductRequestDto productRequestDto : productRequestDtoList){
-      Product product = Product.createProduct(productRequestDto, orders);
-      orders.putProduct(product);
+      Product product = Product.builder()
+          .productDesc(productRequestDto.getProductDesc())
+          .productName(productRequestDto.getProductName())
+          .amount(productRequestDto.getAmount())
+          .originPrice(productRequestDto.getOriginPrice())
+          .discountPrice(productRequestDto.getDiscountPrice())
+          .currency(productRequestDto.getCurrency())
+          .build();
+
+      OrdersProduct ordersProduct = OrdersProduct.builder()
+          .orders(orders)
+          .product(product)
+          .build();
+//
+//      OrderItems orderItems = OrderItems.builder()
+//          .orders(orders)
+//          .product(product)
+//          .build();
     }
 
-    Orders savedOrders = ordersRepository.save(orders);
+    Orders savedOrders = ordersRepository.save(orders);   //cascade니까 orderItems도 들어가겠지?
 
     OrdersResponse ordersResponse = OrdersResponse.builder()
         .orders_id(savedOrders.getOrders_id())
-        .productList(savedOrders.getProductList())
         .shop_id(savedOrders.getShop_id())
         .orderStatus(savedOrders.getOrderStatus())
         .build();
+
+//    OrdersResponse ordersResponse = OrdersResponse.builder()
+//        .orders_id(savedOrders.getOrders_id())
+//        .orderItemsList(savedOrders.getOrderItemsList())
+//        .shop_id(savedOrders.getShop_id())
+//        .orderStatus(savedOrders.getOrderStatus())
+//        .build();
 
     return ordersResponse;
   }

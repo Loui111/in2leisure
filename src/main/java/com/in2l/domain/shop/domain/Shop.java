@@ -1,15 +1,18 @@
 package com.in2l.domain.shop.domain;
 
+import com.in2l.global.common.domain.BaseTimeEntity;
 import com.in2l.global.common.domain.Country;
 import com.in2l.global.common.domain.SubTypes;
 import com.in2l.global.common.domain.Types;
-import java.util.ArrayList;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,12 +20,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Table(name = "shop")
-public class Shop {
+public class Shop extends BaseTimeEntity {
 
   /**
    * type                : ENUM
    * subType         : ENUM
-   * desc               : String
+   * shopDesc               : String
    * country           : ENUM
    * frontImage.     : String
    * contentImage : String
@@ -31,7 +34,8 @@ public class Shop {
    */
 
   @Id
-  @GeneratedValue
+  @Column(name = "shop_id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long shop_id;
 
   @Enumerated(EnumType.STRING)
@@ -40,10 +44,7 @@ public class Shop {
   @Enumerated(EnumType.STRING)
   private SubTypes subTypes;
 
-  //TODO: SHOP을 불러올때마다 Product를 과연 빈번하게 호출하는게 맞는지 고민이 필요함.
-//  private List<Product> productList = new ArrayList<>();
-
-  private String desc;
+  private String shopDesc;
 
   @Enumerated(EnumType.STRING)
   private Country country;
@@ -55,4 +56,17 @@ public class Shop {
   private float reviewScore;
 
   private float rankScore;
+
+  @Builder
+  public Shop(Types types, SubTypes subTypes, String shopDesc,
+      Country country, String frontImage, String contentImage, float reviewScore, float rankScore) {
+    this.types = types;
+    this.subTypes = subTypes;
+    this.shopDesc = shopDesc;
+    this.country = country;
+    this.frontImage = frontImage;
+    this.contentImage = contentImage;
+    this.reviewScore = reviewScore;
+    this.rankScore = rankScore;
+  }
 }

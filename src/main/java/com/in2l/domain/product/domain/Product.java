@@ -12,9 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,7 +27,8 @@ import lombok.NoArgsConstructor;
 public class Product extends BaseTimeEntity {
 
   /**
-   * shopName    : String
+   * shop_id    : Long
+   * shopName       :String
    * productName   :String
    * productDesc     :String
    * amount           :Long
@@ -40,13 +40,13 @@ public class Product extends BaseTimeEntity {
 
   @Id
   @Column(name = "product_id")
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY) //기본 키 생성을 데이터베이스에 위임
   private Long product_id;
 
-  @JsonIgnore
-  @ManyToOne(fetch = LAZY)
-  @JoinColumn(name = "orders_id")
-  private Orders orders;
+//  @JsonIgnore       //orderItems 에서 보고 있으므로 여기선 볼 필요가 없다.
+//  @ManyToOne(fetch = LAZY)
+//  @JoinColumn(name = "orders_id")
+//  private Orders orders;
 
   private Long shop_id;     //shop PK
 
@@ -68,10 +68,9 @@ public class Product extends BaseTimeEntity {
   private Long soldCount;
 
   @Builder
-  public Product(Orders orders, Long shop_id, String shopName, String productName,
-      String productDesc, Long amount, Long originPrice, Long discountPrice,
+  public Product(Long shop_id, String shopName, String productName, String productDesc,
+      Long amount, Long originPrice, Long discountPrice,
       Currency currency, Long soldCount) {
-    this.orders = orders;
     this.shop_id = shop_id;
     this.shopName = shopName;
     this.productName = productName;
@@ -82,7 +81,6 @@ public class Product extends BaseTimeEntity {
     this.currency = currency;
     this.soldCount = soldCount;
   }
-
   /**
    * shopName    : String
    * productName   :String
@@ -94,16 +92,15 @@ public class Product extends BaseTimeEntity {
    * soldCount        :Long
    */
 
-  public static Product createProduct(ProductRequestDto productRequestDto, Orders orders){
-    return Product.builder()
-        .productName(productRequestDto.getProductName())
-        .productDesc(productRequestDto.getProductDesc())
-        .amount(productRequestDto.getAmount())
-        .originPrice(productRequestDto.getOriginPrice())
-        .discountPrice(productRequestDto.getDiscountPrice())
-        .currency(productRequestDto.getCurrency())
-        .amount(productRequestDto.getAmount())
-        .orders(orders)
-        .build();
-  }
+//  public static Product createProduct(ProductRequestDto productRequestDto, Orders orders){
+//    return Product.builder()
+//        .productName(productRequestDto.getProductName())
+//        .productDesc(productRequestDto.getProductDesc())
+//        .amount(productRequestDto.getAmount())
+//        .originPrice(productRequestDto.getOriginPrice())
+//        .discountPrice(productRequestDto.getDiscountPrice())
+//        .currency(productRequestDto.getCurrency())
+//        .amount(productRequestDto.getAmount())
+//        .build();
+//  }
 }

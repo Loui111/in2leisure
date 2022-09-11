@@ -2,7 +2,6 @@ package com.in2l.domain.orders.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.in2l.domain.orders.dto.request.OrdersRequest;
-import com.in2l.domain.product.domain.Product;
 import com.in2l.global.common.domain.BaseTimeEntity;
 import com.in2l.global.common.domain.Currency;
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -28,9 +28,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "orders")   //'order'는 RDB예약어라 쓸수 없음.
 public class Orders extends BaseTimeEntity {
 
-  /** + productList
+  /**
    * member_id        :Long
-   * memberName       :String
    * shop_id        :Long
    * shopName     :String
    * originPrice    :Long
@@ -41,13 +40,13 @@ public class Orders extends BaseTimeEntity {
    */
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "orders_id")
   private Long orders_id;
 
   @JsonIgnore
   @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
-  private List<Product> productList = new ArrayList<>();
+  private List<OrdersProduct> ordersProductList = new ArrayList<>();
 
   private Long member_id;   //user의 PK
 
@@ -70,9 +69,10 @@ public class Orders extends BaseTimeEntity {
   private OrderStatus orderStatus;
 
   @Builder
-  public Orders(Long member_id, String memberName, Long shop_id, String shopName,
-      Long originPrice, Long discountPrice, float discountRate,
+  public Orders(List<OrdersProduct> ordersProductList, Long member_id, String memberName,
+      Long shop_id, String shopName, Long originPrice, Long discountPrice, float discountRate,
       Currency currency, OrderStatus orderStatus) {
+    this.ordersProductList = ordersProductList;
     this.member_id = member_id;
     this.memberName = memberName;
     this.shop_id = shop_id;
@@ -84,12 +84,11 @@ public class Orders extends BaseTimeEntity {
     this.orderStatus = orderStatus;
   }
 
+
 //  public static Orders createOrders(OrdersRequest ordersRequest){
-//
-//
 //  }
 
-  public void putProduct(Product product){
-    this.productList.add(product);
+  public void putOrderItems(OrdersProduct ordersProduct){
+    this.ordersProductList.add(ordersProduct);
   }
 }

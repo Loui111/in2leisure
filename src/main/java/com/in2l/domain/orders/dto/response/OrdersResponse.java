@@ -1,8 +1,7 @@
 package com.in2l.domain.orders.dto.response;
 
 import com.in2l.domain.orders.domain.OrderStatus;
-import com.in2l.domain.product.domain.Product;
-import com.in2l.global.common.domain.Currency;
+import com.in2l.domain.orders.domain.OrdersProduct;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EnumType;
@@ -32,7 +31,7 @@ public class OrdersResponse {
   private Long orders_id;
 
   //  @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-  private List<Product> productList = new ArrayList<>();
+  private List<OrdersProduct> ordersProductList = new ArrayList<>();
 
   private Long user_id;   //user의 PK
 
@@ -55,10 +54,10 @@ public class OrdersResponse {
 
   @Builder
   public OrdersResponse(Long orders_id,
-      List<Product> productList, Long user_id, Long shop_id,
+      List<OrdersProduct> ordersProductList, Long user_id, Long shop_id,
       OrderStatus orderStatus) {
     this.orders_id = orders_id;
-    this.productList = productList;
+    this.ordersProductList = ordersProductList;
     this.user_id = user_id;
     this.shop_id = shop_id;
     this.orderStatus = orderStatus;
