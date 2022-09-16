@@ -59,166 +59,140 @@ class MemberControllerTest {
   LocalDateTime testBirthDay = LocalDateTime.now();
   String testAddress = "송파구";
   String testProfileImage = "/path/image.jpg";
-
-  @Test
-  @DisplayName("1명 get")
-  void Test_get1Member() throws Exception {
-
-    //Given
-    Member member = Member.builder()
-        .email(testEmail)
-        .password(testPassword)
-        .memberName(testMembername)
-        .build();
-
-    String json = objectMapper.writeValueAsString(member);
-
-    Member member1 = memberRepository.save(member);
-
-    //expected
-    mockMvc.perform(get("/v1/member/{memberId}", member1.getMember_id())
-        .contentType(MediaType.APPLICATION_JSON)
-        .contentType(json))
-        .andExpect(status().isOk())
-        .andDo(print());
-
-//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-  }
-
-  @Test
-  @DisplayName("없는사람 1명 get할때 오류가 제대로 뜨는지(안뜬다 TODO)")
-  void Test_get1Member_butError() throws Exception {
-
-    //Given
-    Member member = Member.builder()
-        .email(testEmail)
-        .password(testPassword)
-        .memberName(testMembername)
-        .build();
-
-    String json = objectMapper.writeValueAsString(member);
+}
+//  @Test
+//  @DisplayName("멤버 1명 GET")
+//  void Test_get1Member() throws Exception {
 //
-    Member member1 = memberRepository.save(member);
-
-    //expected
-    mockMvc.perform(get("/v1/member/{memberId}", member1.getMember_id())
-        .contentType(MediaType.APPLICATION_JSON)
-        .contentType(json))
-        .andExpect(status().isOk()) //TODO: MemberNotFound exception과 "사용자를 찾을수 없습니다" 메세지를 테스트해야 하는데 안된다.
-//        .andExpect(result -> assertTrue(result.getResolvedException() instanceof MemberNotFound))
-//        .andExpect(result -> assertTrue(result.getResolvedException().getClass().isAssignableFrom(MemberNotFound.class)))
-//        .andExpect(jsonPath("$.message").value("사용자를 찾을 수 없습니다."))
-        .andDo(print());
-
-//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-  }
-
-  @Test
-  @DisplayName("1명 삭제 확인.")
-  void Test_delete1Member() throws Exception {
-
-    //Given
-    Member member = Member.builder()
-        .email(testEmail)
-        .password(testPassword)
-        .memberName(testMembername)
-        .build();
-
-    Member member1 = memberRepository.save(member);
-
-    //when
-    mockMvc.perform(delete("/v1/member/{memberId}", member1.getMember_id())
-        .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.message").value("사용자가 삭제되었습니다."))
-        .andExpect(status().isOk())
-        .andDo(print());
-
-    //then
-//    Assertions.assertEquals(member1.getMember_id(), 1L);
-
-//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-  }
-
-  @Test
-  @DisplayName("1명 생성 확인.")
-  void Test_post1Member() throws Exception {
-
-    //Given
-    MemberRequest memberRequest = MemberRequest.builder()
-        .email(testEmail)
-        .password(testPassword)
-        .memberName(testMembername)
-        .gender(testGender)
-        .birthDay(testBirthDay)
-        .address(testAddress)
-        .profileImage(testProfileImage)
-        .build();
-
-    String json = objectMapper.writeValueAsString(memberRequest);
-
-    mockMvc.perform(post("/v1/member")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(json))
-        .andExpect(status().isOk())
-        .andDo(print());
-
-    //expected
+//    //Given
+//    Member member = Member.builder()
+//        .email(testEmail)
+//        .password(testPassword)
+//        .memberName(testMembername)
+//        .build();
+//
+//    String json = objectMapper.writeValueAsString(member);
+//
+//    Member member1 = memberRepository.save(member);
+//
+//    //expected
+//    mockMvc.perform(get("/v1/member/{memberId}", member1.getMember_id())
+//        .contentType(MediaType.APPLICATION_JSON)
+//        .contentType(json))
+//        .andExpect(status().isOk())
+//        .andDo(print());
+//  }
+//
+//  @Test
+//  @DisplayName("없는사람 1명 get할때 오류가 제대로 뜨는지(안뜬다 TODO)")
+//  void Test_get1Member_butError() throws Exception {
+//
+//    //Given
+//    Member member = Member.builder()
+//        .email(testEmail)
+//        .password(testPassword)
+//        .memberName(testMembername)
+//        .build();
+//
+//    String json = objectMapper.writeValueAsString(member);
+////
+//    Member member1 = memberRepository.save(member);
+//
+//    //expected
+//    mockMvc.perform(get("/v1/member/{memberId}", member1.getMember_id())
+//        .contentType(MediaType.APPLICATION_JSON)
+//        .contentType(json))
+//        .andExpect(status().isOk()) //TODO: MemberNotFound exception과 "사용자를 찾을수 없습니다" 메세지를 테스트해야 하는데 안된다.
+////        .andExpect(result -> assertTrue(result.getResolvedException() instanceof MemberNotFound))
+////        .andExpect(result -> assertTrue(result.getResolvedException().getClass().isAssignableFrom(MemberNotFound.class)))
+////        .andExpect(jsonPath("$.message").value("사용자를 찾을 수 없습니다."))
+//        .andDo(print());
+//
+////import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+////import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+//  }
+//
+//  @Test
+//  @DisplayName("멤버 1명 삭제 확인.")
+//  void Test_delete1Member() throws Exception {
+//
+//    //Given
+//    Member member = Member.builder()
+//        .email(testEmail)
+//        .password(testPassword)
+//        .memberName(testMembername)
+//        .build();
+//
+//    Member member1 = memberRepository.save(member);
+//
+//    //when
+//    mockMvc.perform(delete("/v1/member/{memberId}", member1.getMember_id())
+//        .contentType(MediaType.APPLICATION_JSON))
+//        .andExpect(jsonPath("$.message").value("사용자가 삭제되었습니다."))
+//        .andExpect(status().isOk())
+//        .andDo(print());
+//
+//    //then
+////    Assertions.assertEquals(member1.getMember_id(), 1L);
+//
+////import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+////import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+//  }
+//
+//  @Test
+//  @DisplayName("멤버 1명 생성 확인.")
+//  void Test_post1Member() throws Exception {
+//
+//    //Given
+//    MemberRequest memberRequest = MemberRequest.builder()
+//        .email(testEmail)
+//        .password(testPassword)
+//        .memberName(testMembername)
+//        .gender(testGender)
+//        .birthDay(testBirthDay)
+//        .address(testAddress)
+//        .profileImage(testProfileImage)
+//        .build();
+//
+//    String json = objectMapper.writeValueAsString(memberRequest);
+//
 //    mockMvc.perform(post("/v1/member")
-//      .content(json)
-//      .contentType(MediaType.APPLICATION_JSON))
-//        .andDo(print())
-//        .andExpect(jsonPath("$.message").value("사용자가 생성되었습니다."))
+//        .contentType(MediaType.APPLICATION_JSON)
+//        .content(json))
+//        .andExpect(status().isOk())
+//        .andDo(print());
+//  }
+//
+//  @Test
+//  @DisplayName("멤버 1명 프로필 업데이트 확인")
+//  void Test_patch1Member() throws Exception {
+//    //Given
+//    Member member = Member.builder()
+//        .email(testEmail)
+//        .password(testPassword)
+//        .memberName(testMembername)
+//        .build();
+//
+//    Member member1 = memberRepository.save(member);
+//
+//    //when
+//    MemberRequest memberRequest = MemberRequest.builder()
+//        .email("updatedEmail@gmail.com")
+//        .password(testPassword)
+//        .memberName("updated고냥인")
+//        .address("updated송파구")
+//        .profileImage("updated/path/")
+//        .birthDay(LocalDateTime.now())
+//        .gender(GenderType.MALE)
+//        .phoneNumber("updated010812345")
+//        .build();
+//
+//    mockMvc.perform(patch("/v1/member/{memberId}", member1.getMember_id())
+//      .contentType(MediaType.APPLICATION_JSON)
+//        .content(objectMapper.writeValueAsString(memberRequest)))
 //        .andExpect(status().isOk());
-  }
-
-  @Test
-  @DisplayName("1명 업데이트 확인")
-  void Test_patch1Member() throws Exception {
-    //Given
-    Member member = Member.builder()
-        .email(testEmail)
-        .password(testPassword)
-        .memberName(testMembername)
-        .build();
-
-    Member member1 = memberRepository.save(member);
-
-    //when
-    MemberRequest memberRequest = MemberRequest.builder()
-        .email("updatedEmail@gmail.com")
-        .password(testPassword)
-        .memberName("updated고냥인")
-        .address("updated송파구")
-        .profileImage("updated/path/")
-        .birthDay(LocalDateTime.now())
-        .gender(GenderType.MALE)
-        .phoneNumber("updated010812345")
-        .build();
-
-    mockMvc.perform(patch("/v1/member/{memberId}", member1.getMember_id())
-      .contentType(MediaType.APPLICATION_JSON)
-        .content(objectMapper.writeValueAsString(memberRequest)))
-        .andExpect(status().isOk());
-
-//        objectMapper.writeValueAsString(data);
-
-//        .content(objectMapper.toJson(MemberRequest))
-//        .content(objectMapper.writeValueAsString(MemberRequest)))
-//        .andExpect(HttpStatus.OK);
-
-    //then
-
-
-
-
-  }
-
-
-
-  }
+//  }
+//}
 
 //
 //

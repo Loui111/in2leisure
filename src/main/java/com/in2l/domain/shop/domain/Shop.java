@@ -39,10 +39,10 @@ public class Shop extends BaseTimeEntity {
   private Long shop_id;
 
   @Enumerated(EnumType.STRING)
-  private Types types;
+  private Types types;      //TODO: category 로 바꿔야 할듯.
 
   @Enumerated(EnumType.STRING)
-  private SubTypes subTypes;
+  private SubTypes subTypes;    //TODO: subCattegory로 바꿔야 할듯.
 
   private String shopDesc;
 

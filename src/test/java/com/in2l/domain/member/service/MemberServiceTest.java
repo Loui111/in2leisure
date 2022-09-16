@@ -44,75 +44,73 @@ class MemberServiceTest {
   String testAddress = "송파구";
   String testProfileImage = "/path/image.jpg";
 
-  @Test
-  @DisplayName("member 1명 조회")    //TODO: 이건 솔까 뭔가 이상한 테스트케이스임.
-  void Test_1MemberSearch(){
-    //given
-    Member member = Member.builder()
-        .email(testEmail)
-        .memberName(testMembername)
-        .password(testPassword)
-        .build();
-
-    Member savedMember = memberRepository.save(member);
-
-//    Long member_id = member.getMember_id();
-
-    //when
-    Member selectedMember = memberService.selectMemberService(savedMember.getMember_id());
-
-    //then
-    Assertions.assertEquals(selectedMember.getMember_id(), savedMember.getMember_id());
-  }
-
-  @Test
-  @DisplayName("맴버 1명 생성")
-  void Test_1MemberCreate(){
-    //MemberRequest를 통해 Front에서 사용자가 들어오고, valid체크되고,
-
-    //Given
-    MemberRequest memberRequest = MemberRequest.builder()
-        .email(testEmail)
-        .password(testPassword)
-        .memberName(testMembername)
-        .gender(testGender)
-        .birthDay(testBirthDay)
-        .address(testAddress)
-        .profileImage(testProfileImage)
-        .build();
-
-    //when
-    MemberResponse member1 = memberService.createMemberService(memberRequest);
-
-    //then
-    Assertions.assertNotNull(member1);
-    Assertions.assertEquals(testMembername, member1.getMemberName());
-    Assertions.assertEquals(testEmail, member1.getEmail());
-  }
-
-  @Test
-  @DisplayName("맴버 생성시 비번오류.")
-  void Test_1MemberCreate_error_password(){
-    //MemberRequest를 통해 Front에서 사용자가 들어오고, valid체크되고,
-
-    //Given
-    MemberRequest memberRequest = MemberRequest.builder()
-        .email(testEmail)
-        .password("8901")
-        .memberName(testMembername)
-        .gender(testGender)
-        .birthDay(testBirthDay)
-        .address(testAddress)
-        .profileImage(testProfileImage)
-        .build();
-
-    //when
-    MemberResponse member1 = this.memberService.createMemberService(memberRequest);
-
-    //then
-    Assertions.assertNotNull(member1);
-    Assertions.assertEquals(testMembername, member1.getMemberName());
-    Assertions.assertEquals(testEmail, member1.getEmail());
-  }
+//  @Test
+//  @DisplayName("멤버 1명 조회")    //TODO: 이건 솔까 뭔가 이상한 테스트케이스임.
+//  void Test_1MemberSearch(){
+//    //given
+//    Member member = Member.builder()
+//        .email(testEmail)
+//        .memberName(testMembername)
+//        .password(testPassword)
+//        .build();
+//
+//    Member savedMember = memberRepository.save(member);
+//
+//    //when
+//    MemberResponse memberResponse = memberService.getMember(savedMember.getMember_id());
+//
+//    //then
+//    Assertions.assertEquals(memberResponse.getMember_id(), savedMember.getMember_id());
+//  }
+//
+//  @Test
+//  @DisplayName("맴버 1명 생성")
+//  void Test_1MemberCreate(){
+//    //MemberRequest를 통해 Front에서 사용자가 들어오고, valid체크되고,
+//
+//    //Given
+//    MemberRequest memberRequest = MemberRequest.builder()
+//        .email(testEmail)
+//        .password(testPassword)
+//        .memberName(testMembername)
+//        .gender(testGender)
+//        .birthDay(testBirthDay)
+//        .address(testAddress)
+//        .profileImage(testProfileImage)
+//        .build();
+//
+//    //when
+//    MemberResponse member1 = memberService.postMember(memberRequest);
+//
+//    //then
+//    Assertions.assertNotNull(member1);
+//    Assertions.assertEquals(testMembername, member1.getMemberName());
+//    Assertions.assertEquals(testEmail, member1.getEmail());
+//  }
+//
+//  @Test
+//  @DisplayName("맴버 생성시 비번오류.")
+//  void Test_1MemberCreate_error_password(){
+//    //MemberRequest를 통해 Front에서 사용자가 들어오고, valid체크되고,
+//
+//    //Given
+//    MemberRequest memberRequest = MemberRequest.builder()
+//        .email(testEmail)
+//        .password("8901")
+//        .memberName(testMembername)
+//        .gender(testGender)
+//        .birthDay(testBirthDay)
+//        .address(testAddress)
+//        .profileImage(testProfileImage)
+//        .build();
+//
+//    //when
+//    MemberResponse member1 = this.memberService.postMember(memberRequest);
+//
+//    //then
+//    Assertions.assertNotNull(member1);
+//    Assertions.assertEquals(testMembername, member1.getMemberName());
+//    Assertions.assertEquals(testEmail, member1.getEmail());
+//  }
 }
 

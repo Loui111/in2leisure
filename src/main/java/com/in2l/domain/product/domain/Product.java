@@ -1,12 +1,12 @@
 package com.in2l.domain.product.domain;
 
-import static javax.persistence.FetchType.LAZY;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.in2l.domain.orders.domain.Orders;
-import com.in2l.domain.product.dto.request.ProductRequestDto;
+import com.in2l.domain.order.domain.OrderProduct;
 import com.in2l.global.common.domain.BaseTimeEntity;
 import com.in2l.global.common.domain.Currency;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,6 +14,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -46,7 +47,11 @@ public class Product extends BaseTimeEntity {
 //  @JsonIgnore       //orderItems 에서 보고 있으므로 여기선 볼 필요가 없다.
 //  @ManyToOne(fetch = LAZY)
 //  @JoinColumn(name = "orders_id")
-//  private Orders orders;
+//  private Orders order;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+  private List<OrderProduct> orderProductList = new ArrayList<>();
 
   private Long shop_id;     //shop PK
 
@@ -92,7 +97,7 @@ public class Product extends BaseTimeEntity {
    * soldCount        :Long
    */
 
-//  public static Product createProduct(ProductRequestDto productRequestDto, Orders orders){
+//  public static Product createProduct(ProductRequestDto productRequestDto, Orders order){
 //    return Product.builder()
 //        .productName(productRequestDto.getProductName())
 //        .productDesc(productRequestDto.getProductDesc())

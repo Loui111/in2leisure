@@ -1,10 +1,13 @@
 package com.in2l.domain.member.dto.request;
 
 import com.in2l.domain.member.domain.GenderType;
+import com.in2l.domain.member.domain.Member;
 import com.in2l.domain.member.exception.InvalidMemberRequest;
 import com.in2l.global.common.domain.BaseTimeEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
@@ -16,6 +19,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 @NoArgsConstructor    //이거 없으면 json오류 났었음.
@@ -50,8 +54,10 @@ public class MemberRequest{
 
   private String phoneNumber;
 
+  @Enumerated(EnumType.STRING)
   private GenderType gender;
 
+//  @DateTimeFormat
   private LocalDateTime birthDay;
 
   private String address;
@@ -73,6 +79,21 @@ public class MemberRequest{
     this.birthDay = birthDay;
     this.address = address;
     this.profileImage = profileImage;
+  }
+
+  public static Member of(MemberRequest memberRequest) {
+    Member member1 = Member.builder()
+        .email(memberRequest.getEmail())
+        .password(memberRequest.getPassword())    //TODO: 암호화 필요.
+        .memberName(memberRequest.getMemberName())
+        .phoneNumber(memberRequest.getPhoneNumber())
+        .gender(memberRequest.getGender())
+        .birthDay(memberRequest.getBirthDay())    //TODO: Front에서 받아온거 LocalDateTime으로 파싱 필요.
+        .address(memberRequest.getAddress())
+        .profileImage(memberRequest.getProfileImage())
+        .build();
+
+    return member1;
   }
 
   public void validate() {

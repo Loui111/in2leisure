@@ -2,7 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.7.2'
 	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
 	id 'java'
-	id "org.flywaydb.flyway" version "8.2.0"
+//	id "org.flywaydb.flyway" version "8.2.0"
 }
 
 group = 'com.in2l'
@@ -25,8 +25,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	implementation 'mysql:mysql-connector-java'
-	implementation 'org.flywaydb:flyway-core'
-	implementation 'org.flywaydb:flyway-mysql'
+//	implementation 'org.flywaydb:flyway-core'
+//	implementation 'org.flywaydb:flyway-mysql'
 
 	compileOnly 'org.projectlombok:lombok'
 //	runtimeOnly 'com.h2database:h2'
@@ -35,6 +35,10 @@ dependencies {
 
 	implementation 'com.querydsl:querydsl-core'
 	implementation 'com.querydsl:querydsl-jpa'
+
+	implementation "com.fasterxml.jackson.core:jackson-core:2.13.3"
+	implementation "com.fasterxml.jackson.core:jackson-annotations:2.13.3"
+	implementation "com.fasterxml.jackson.core:jackson-databind:2.13.3"
 
 	//querydsl 클래스 파일을 만들어주기 위한 패키지.
 	// 현재 디펜던시 매니저를 통해서 가져온 쿼리dsl버전과 똑같은걸 설치 하겠다.
@@ -47,11 +51,11 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 //
-flyway {
-	url = 'jdbc:mysql://localhost:3306/in2l_dev?useSSL=false&serverTimezone=UTC&characterEncoding=utf8'
-	user = 'in2l_developer'
-	password = 'yP1#^Y#6f3r6B1g'
-}
+//flyway {
+//	url = 'jdbc:mysql://localhost:3306/in2l_dev?useSSL=false&serverTimezone=UTC&characterEncoding=utf8'
+//	user = 'in2l_developer'
+//	password = 'yP1#^Y#6f3r6B1g'
+//}
 
 //flyway {
 //	url = 'jdbc:h2:mem:in2l'

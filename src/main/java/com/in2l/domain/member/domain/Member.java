@@ -4,6 +4,8 @@ import com.in2l.global.common.domain.BaseTimeEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,7 +19,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-//@NoArgsConstructor(access = AccessLevel.PUBLIC)  //Entity는 기본 생성자를 넣어줘야 한다?
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member")
 public class Member extends BaseTimeEntity {
@@ -41,7 +42,7 @@ public class Member extends BaseTimeEntity {
   @NotBlank
   private String email;
 
-  @NotBlank
+  @NotBlank   //TODO: regetx valid 넣어야함 (memberEditor에 있음)
   private String password;
 
   @NotBlank
@@ -49,6 +50,7 @@ public class Member extends BaseTimeEntity {
 
   private String phoneNumber;
 
+  @Enumerated(EnumType.STRING)
   private GenderType gender;
 
   private LocalDateTime birthDay;
@@ -76,6 +78,7 @@ public class Member extends BaseTimeEntity {
     // public edit(String email, String password....){} 뭐 이런게 일반적이지만,
     // MemberEditor라는 도메인에 builder를 새로 선언해서
     // 여기다 변경될 코드를 선언해서 씀.
+    //근데 나 이거 잘 못쓰겠....
 
     MemberEditor.MemberEditorBuilder builder = MemberEditor.builder()
         .email(email)

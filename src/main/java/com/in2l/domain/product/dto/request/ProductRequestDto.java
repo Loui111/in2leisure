@@ -1,15 +1,9 @@
 package com.in2l.domain.product.dto.request;
 
-import static javax.persistence.FetchType.LAZY;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.in2l.domain.orders.domain.Orders;
 import com.in2l.global.common.domain.Currency;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,7 +20,7 @@ public class ProductRequestDto {
 
   private String productDesc;
 
-  private Long amount;
+  private Long buyCount;
 
   private Long originPrice;
 
@@ -36,4 +30,17 @@ public class ProductRequestDto {
   private Currency currency;
 
 //  private Long soldCount;
+
+  @Builder
+  public ProductRequestDto(Long product_id, String productName, String productDesc,
+      Long buyCount, Long originPrice, Long discountPrice,
+      Currency currency) {
+    this.product_id = product_id;
+    this.productName = productName;
+    this.productDesc = productDesc;
+    this.buyCount = buyCount;
+    this.originPrice = originPrice;
+    this.discountPrice = discountPrice;
+    this.currency = currency;
+  }
 }

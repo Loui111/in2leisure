@@ -2,6 +2,8 @@ package com.in2l.domain.member.domain;
 
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
@@ -44,6 +46,7 @@ public class MemberEditor {
 
   private String phoneNumber;
 
+  @Enumerated(EnumType.STRING)
   private GenderType gender;
 
   private LocalDateTime birthDay;
