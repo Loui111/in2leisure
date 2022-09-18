@@ -1,6 +1,7 @@
 package com.in2l.domain.order.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.in2l.domain.order.dto.request.OrderRequest;
 import com.in2l.global.common.domain.BaseTimeEntity;
 import com.in2l.global.common.domain.Currency;
 import java.util.ArrayList;
@@ -82,6 +83,19 @@ public class Order extends BaseTimeEntity {
     this.orderStatus = orderStatus;
   }
 
+  public static Order of(OrderRequest orderRequest) {
+    return Order.builder()
+        .member_id(orderRequest.getMember_id())
+        .memberName(orderRequest.getMemberName())
+        .shop_id(orderRequest.getShop_id())
+        .shopName(orderRequest.getShopName())
+        .originPrice(orderRequest.getOriginPrice())
+        .discountPrice(orderRequest.getDiscountPrice())
+        .discountRate(orderRequest.getDiscountRate())
+        .currency(orderRequest.getCurrency())
+        .orderStatus(orderRequest.getOrderStatus())
+        .build();
+  }
 
 //  public static Orders createOrders(OrdersRequest ordersRequest){
 //  }

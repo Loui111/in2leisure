@@ -14,6 +14,7 @@ import com.in2l.domain.product.exception.ProductNotFound;
 import com.in2l.domain.product.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,9 +34,7 @@ public class OrderService {
     Order savedOrder = ordersRepository.findById(ordersId)
         .orElseThrow(() -> new OrderNotFound());
 
-//    OrderResponse of = OrderResponse.of(savedOrder);
-
-    return OrderResponse.of(savedOrder);
+    return OrderResponse.of(savedOrder).setMESSAGE("주문확인 완료.");
   }
 
   public OrderResponse postOrder(OrderRequest orderRequest) {
@@ -44,15 +43,14 @@ public class OrderService {
     List<ProductRequestDto> productList = orderRequest.getProductList();
 
     //3. requestDTO를 통해 order 생성
-    //TODO: 밑에 product.findbyId가 fail이믄 order자체가 캔슬되어야 하는데?
-    Order savedOrder = createOrders(orderRequest);
+    Order savedOrder = ordersRepository.save(Order.of(orderRequest));
 
-    //product가 있는지 하나씩 돌아가면서 확인
-    List<Long> productIds = productList.stream().map(p -> p.getProduct_id()).collect(Collectors.toList());
+    List<Long> productIds = productList.stream().map(p -> p.getProduct_id())
+        .collect(Collectors.toList());
     List<Product> products = this.productRepository.findAllById(productIds);
-    if(products.size() != productIds.size()){
+    if (products.size() != productIds.size()) {
       throw new ProductNotFound();
-    }
+    }//개수가 맞지 않으면 == 없는 제품이 있다는거.
 
     List<OrderProduct> orderProducts = products.stream().map(p -> OrderProduct.builder()
         .product(p)
@@ -60,22 +58,34 @@ public class OrderService {
         .build()).collect(Collectors.toList());
     ordersProductRepository.saveAll(orderProducts);
 
-    List<ProductResponseDto> productResponseDtos = productList.stream().map(p -> ProductResponseDto.builder()
-        .product_id(p.getProduct_id())
-        .productName(p.getProductName())
-        .buyCount(p.getBuyCount())    //이건 Dto에서
-        .build()).collect(Collectors.toList());
+    List<ProductResponseDto> productResponseDtos = productList.stream()
+        .map(p -> ProductResponseDto.builder()
+            .product_id(p.getProduct_id())
+            .productName(p.getProductName())
+            .buyCount(p.getBuyCount())
+            .build()).collect(Collectors.toList());
 
     //프론트에 던져줄 OrderResponse = 1order + N Product
     OrderResponse ordersResponse = OrderResponse.builder()
         .order_id(savedOrder.getOrder_id())
         .shop_id(savedOrder.getShop_id())
         .orderStatus(savedOrder.getOrderStatus())
-//        .productResponseDtoList(productResponseDtos)    //TODO: 나중에 살리자.
+        .productResponseDtos(productResponseDtos)
+        .MESSAGE("주문이 완료되었습니다.")
         .build();
 
     return ordersResponse;
-    }
+  }
+
+  public OrderResponse deleteOrder(Long ordersId) {
+    Order savedOrder = ordersRepository.findById(ordersId)
+        .orElseThrow(() -> new OrderNotFound());
+
+    ordersRepository.delete(savedOrder);
+
+    return OrderResponse.of(savedOrder).setMESSAGE("주문이 삭제되었습니다.");
+  }
+}
 
 
 //    Orders savedOrders = createOrders(ordersRequest);
@@ -113,34 +123,20 @@ public class OrderService {
 //
 //    return ordersResponse
 
-  private Order createOrders(OrderRequest orderRequest) {
-
-    /**
-     * member_id        :Long
-     * memberName       :String
-     * shop_id        :Long
-     * shopName     :String
-     * originPrice    :Long
-     * discountPrice: Long
-     * discountRate : float
-     * currency        :ENUM
-     * orderStatus    : ENUM
-     */
-
-    Order order = Order.builder()
-        .member_id(orderRequest.getMember_id())
-        .memberName(orderRequest.getMemberName())
-        .shop_id(orderRequest.getShop_id())
-        .shopName(orderRequest.getShopName())
-        .originPrice(orderRequest.getOriginPrice())
-        .discountPrice(orderRequest.getDiscountPrice())
-        .discountRate(orderRequest.getDiscountRate())
-        .currency(orderRequest.getCurrency())
-        .orderStatus(orderRequest.getOrderStatus())
-        .build();
-
-    Order order1 = ordersRepository.save(order);
-
-    return order1;
-  }
-}
+//  private Order createOrder(OrderRequest orderRequest) {
+//
+//    Order order = Order.builder()
+//        .member_id(orderRequest.getMember_id())
+//        .memberName(orderRequest.getMemberName())
+//        .shop_id(orderRequest.getShop_id())
+//        .shopName(orderRequest.getShopName())
+//        .originPrice(orderRequest.getOriginPrice())
+//        .discountPrice(orderRequest.getDiscountPrice())
+//        .discountRate(orderRequest.getDiscountRate())
+//        .currency(orderRequest.getCurrency())
+//        .orderStatus(orderRequest.getOrderStatus())
+//        .build();
+//
+//    Order order1 = ordersRepository.save(order);
+//
+//    return order1;

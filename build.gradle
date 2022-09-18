@@ -3,7 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
 	id 'java'
 //	id "org.flywaydb.flyway" version "8.2.0"
-}
+	}
 
 group = 'com.in2l'
 version = '0.0.1-SNAPSHOT'
@@ -35,10 +35,17 @@ dependencies {
 
 	implementation 'com.querydsl:querydsl-core'
 	implementation 'com.querydsl:querydsl-jpa'
+// https://mvnrepository.com/artifact/com.google.guava/guava
+	implementation 'com.google.guava:guava:30.1.1-jre'
+
+
 
 	implementation "com.fasterxml.jackson.core:jackson-core:2.13.3"
 	implementation "com.fasterxml.jackson.core:jackson-annotations:2.13.3"
 	implementation "com.fasterxml.jackson.core:jackson-databind:2.13.3"
+
+
+//	compile group: 'com.google.guava', name: 'guava', version: '12.0'
 
 	//querydsl 클래스 파일을 만들어주기 위한 패키지.
 	// 현재 디펜던시 매니저를 통해서 가져온 쿼리dsl버전과 똑같은걸 설치 하겠다.

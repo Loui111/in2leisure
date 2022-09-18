@@ -6,6 +6,7 @@ import com.in2l.domain.order.dto.response.OrderResponse;
 import com.in2l.domain.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,5 +32,10 @@ public class OrderController {
   public OrderResponse postOrder(@RequestBody OrderRequest orderRequest){
     OrderResponse ordersResponse = orderService.postOrder(orderRequest);
     return ordersResponse;
+  }
+
+  @DeleteMapping("/{ordersId}")
+  public OrderResponse deleteOrder(@PathVariable Long ordersId){
+    return orderService.deleteOrder(ordersId);
   }
 }
