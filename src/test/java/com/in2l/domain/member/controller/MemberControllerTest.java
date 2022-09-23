@@ -53,7 +53,7 @@ class MemberControllerTest {
 
   String testEmail = "test@gmail.com";
   String testPassword = "Password123!@#";
-  String testMembername = "고냥인";
+  String testName = "고냥인";
   String testPhoneNumber = "0108811234";
   GenderType testGender = GenderType.MALE;
   LocalDateTime testBirthDay = LocalDateTime.now();
@@ -68,7 +68,7 @@ class MemberControllerTest {
 //    Member member = Member.builder()
 //        .email(testEmail)
 //        .password(testPassword)
-//        .memberName(testMembername)
+//        .name(testname)
 //        .build();
 //
 //    String json = objectMapper.writeValueAsString(member);
@@ -76,7 +76,7 @@ class MemberControllerTest {
 //    Member member1 = memberRepository.save(member);
 //
 //    //expected
-//    mockMvc.perform(get("/v1/member/{memberId}", member1.getMember_id())
+//    mockMvc.perform(get("/v1/member/{id}", member1.getId())
 //        .contentType(MediaType.APPLICATION_JSON)
 //        .contentType(json))
 //        .andExpect(status().isOk())
@@ -91,7 +91,7 @@ class MemberControllerTest {
 //    Member member = Member.builder()
 //        .email(testEmail)
 //        .password(testPassword)
-//        .memberName(testMembername)
+//        .name(testname)
 //        .build();
 //
 //    String json = objectMapper.writeValueAsString(member);
@@ -99,7 +99,7 @@ class MemberControllerTest {
 //    Member member1 = memberRepository.save(member);
 //
 //    //expected
-//    mockMvc.perform(get("/v1/member/{memberId}", member1.getMember_id())
+//    mockMvc.perform(get("/v1/member/{id}", member1.getId())
 //        .contentType(MediaType.APPLICATION_JSON)
 //        .contentType(json))
 //        .andExpect(status().isOk()) //TODO: MemberNotFound exception과 "사용자를 찾을수 없습니다" 메세지를 테스트해야 하는데 안된다.
@@ -120,20 +120,20 @@ class MemberControllerTest {
 //    Member member = Member.builder()
 //        .email(testEmail)
 //        .password(testPassword)
-//        .memberName(testMembername)
+//        .name(testname)
 //        .build();
 //
 //    Member member1 = memberRepository.save(member);
 //
 //    //when
-//    mockMvc.perform(delete("/v1/member/{memberId}", member1.getMember_id())
+//    mockMvc.perform(delete("/v1/member/{id}", member1.getId())
 //        .contentType(MediaType.APPLICATION_JSON))
 //        .andExpect(jsonPath("$.message").value("사용자가 삭제되었습니다."))
 //        .andExpect(status().isOk())
 //        .andDo(print());
 //
 //    //then
-////    Assertions.assertEquals(member1.getMember_id(), 1L);
+////    Assertions.assertEquals(member1.getId(), 1L);
 //
 ////import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 ////import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -147,7 +147,7 @@ class MemberControllerTest {
 //    MemberRequest memberRequest = MemberRequest.builder()
 //        .email(testEmail)
 //        .password(testPassword)
-//        .memberName(testMembername)
+//        .name(testname)
 //        .gender(testGender)
 //        .birthDay(testBirthDay)
 //        .address(testAddress)
@@ -170,7 +170,7 @@ class MemberControllerTest {
 //    Member member = Member.builder()
 //        .email(testEmail)
 //        .password(testPassword)
-//        .memberName(testMembername)
+//        .name(testname)
 //        .build();
 //
 //    Member member1 = memberRepository.save(member);
@@ -179,7 +179,7 @@ class MemberControllerTest {
 //    MemberRequest memberRequest = MemberRequest.builder()
 //        .email("updatedEmail@gmail.com")
 //        .password(testPassword)
-//        .memberName("updated고냥인")
+//        .name("updated고냥인")
 //        .address("updated송파구")
 //        .profileImage("updated/path/")
 //        .birthDay(LocalDateTime.now())
@@ -187,7 +187,7 @@ class MemberControllerTest {
 //        .phoneNumber("updated010812345")
 //        .build();
 //
-//    mockMvc.perform(patch("/v1/member/{memberId}", member1.getMember_id())
+//    mockMvc.perform(patch("/v1/member/{id}", member1.getId())
 //      .contentType(MediaType.APPLICATION_JSON)
 //        .content(objectMapper.writeValueAsString(memberRequest)))
 //        .andExpect(status().isOk());

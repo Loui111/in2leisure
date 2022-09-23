@@ -17,13 +17,13 @@ import lombok.ToString;
 public class OrderResponse {
 
   @Id
-  private Long order_id;
+  private Long id;
 
   private List<ProductResponseDto> productResponseDtos = new ArrayList<>();
 
-  private Long member_id;   //user의 PK
+  private Long memberId;   //user의 PK
 
-  private Long shop_id;   //shop의 PK임.
+  private Long shopId;   //shop의 PK임.
 
   private String MESSAGE;
 
@@ -31,13 +31,13 @@ public class OrderResponse {
   private OrderStatus orderStatus;
 
   @Builder
-  public OrderResponse(Long order_id,
-      List<ProductResponseDto> productResponseDtos, Long member_id, Long shop_id,
+  public OrderResponse(Long id,
+      List<ProductResponseDto> productResponseDtos, Long memberId, Long shopId,
       String MESSAGE, OrderStatus orderStatus) {
-    this.order_id = order_id;
+    this.id = id;
     this.productResponseDtos = productResponseDtos;
-    this.member_id = member_id;
-    this.shop_id = shop_id;
+    this.memberId = memberId;
+    this.shopId = shopId;
     this.MESSAGE = MESSAGE;
     this.orderStatus = orderStatus;
   }
@@ -49,9 +49,9 @@ public class OrderResponse {
 
   public static OrderResponse of(Order order) {
     OrderResponse orderResponse = OrderResponse.builder()
-        .order_id(order.getOrder_id())
-        .member_id(order.getMember_id())
-        .shop_id(order.getShop_id())
+        .id(order.getId())
+        .memberId(order.getId())
+        .shopId(order.getShopId())
         .orderStatus(order.getOrderStatus())
         .build();
 

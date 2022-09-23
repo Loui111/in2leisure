@@ -35,30 +35,30 @@ class MemberTest {
 //    Long testId = 1L;
 //    String testEmail = "test@gmail.com";
 //    String testPassword = "password";
-//    String testMembername = "고냥인";
+//    String testname = "고냥인";
 //
 //    Member member = Member.builder()
 //        .member_id(testId)
 //        .email(testEmail)
-//        .memberName(testMembername)
+//        .name(testname)
 //        .password(testPassword)
 //        .build();
 //
 //    memberRepository.save(member);
 //
-//    Long member_id = member.getMember_id();
+//    Long member_id = member.getId();
 //
 //    //when
 //    Member member1 = memberService.getMember(member_id);
 //
 //    //then
-//    Assertions.assertEquals(testId, member1.getMember_id());
+//    Assertions.assertEquals(testId, member1.getId());
 //    Assertions.assertEquals(testEmail, member1.getEmail());
 
 //    /**
 //     * email            :String
 //     * password     :String
-//     * membername    :String
+//     * name    :String
 //     * phoneNumber  :String
 //     * gender         :ENUM
 //     * birthDay        :DateTime
@@ -73,7 +73,7 @@ class MemberTest {
 //        .member_id(1L)
 //        .email("test@gmail.com")
 //        .password("password")
-//        .memberName("고냥인")
+//        .name("고냥인")
 //        .phoneNumber("010888888")
 //        .gender(GenderType.FEMALE)
 //        .birthDay(LocalDateTime.now())
@@ -83,16 +83,16 @@ class MemberTest {
 //
 //    Member member1 = memberRepository.save(member);
 //
-//    Assertions.assertEquals(1L, member1.getMember_id());
+//    Assertions.assertEquals(1L, member1.getId());
 //    Assertions.assertEquals("12341234", member1.getEmail());
 //
-////    Long member1 = member.getMember_id();
+////    Long member1 = member.getId();
 ////
 ////    //when
 ////    Member member1 = memberService.getMember(member_id);
 ////
 ////    //then
-////    Assertions.assertEquals(testId, member1.getMember_id());
+////    Assertions.assertEquals(testId, member1.getId());
 ////    Assertions.assertEquals(testEmail, member1.getEmail());
 ////
 //    //expected

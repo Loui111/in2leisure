@@ -1,40 +1,36 @@
 package com.in2l.domain.member.repository;
 
+import com.in2l.domain.member.domain.Member;
+import com.in2l.domain.member.domain.QMember;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class MemberRepositoryImpl implements MemberRepositoryCustom{
+public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
   private final JPAQueryFactory jpaQueryFactory;
 
-//  @Override
-//  public List<Member> getMemberList(){
-//
-//  }
-  //TODO: createMember시 validation 필요?
+  @Override
+  public Member findByName(String name) {
+    return jpaQueryFactory.selectFrom(QMember.member)
+        .where(QMember.member.name.eq(name))
+        .fetchOne();
+  }
 
+  @Override
+  public Optional<Member> findByIdWithDeleteFlagFalse(Long id) {
+    return Optional.ofNullable(jpaQueryFactory.selectFrom(QMember.member)
+        .where(QMember.member.deleteFlag.eq(Boolean.FALSE))
+        .where(QMember.member.id.eq(id))
+        .fetchOne());
+  }
+
+  @Override
+  public Optional<List<Member>> findAllWithoutDelete(){
+    return Optional.ofNullable(jpaQueryFactory.selectFrom(QMember.member)
+        .where(QMember.member.deleteFlag.eq(Boolean.FALSE))
+        .fetch());
+  }
 }
-
-//  @Override//실제 여긴데??
-//  public List<Post> getList(PostSearch postSearch) {
-//
-//    EntityManager entityManager = null;
-//    new JPAQueryFactory(entityManager);
-//
-//    QPost qPost = new QPost("p");
-//
-////    Post findpost = (Post) jpaQueryFactory
-////        .selectFrom(QPost.post)
-////        .limit(postSearch.getSize())
-////        .offset(postSearch.getOffset())
-////        .orderBy(QPost.post.id.desc())
-////        .fetch();
-//    return jpaQueryFactory.selectFrom(QPost.post)
-//        .limit(postSearch.getSize())
-//        .offset(postSearch.getOffset())
-////        .offset( (postSearch.getPage()-1) * postSearch.getSize())  //매전 이러는거 귀찮으니 postSearchdp 구현하자.
-//        .orderBy(QPost.post.id.desc())
-//        .fetch();
-//  }
-//}

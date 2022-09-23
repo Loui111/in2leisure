@@ -1,10 +1,12 @@
 package com.in2l.domain.order.service;
 
+import com.in2l.domain.member.exception.MemberNotFound;
 import com.in2l.domain.order.domain.Order;
 import com.in2l.domain.order.domain.OrderProduct;
 import com.in2l.domain.order.dto.request.OrderRequest;
 import com.in2l.domain.order.dto.response.OrderResponse;
 import com.in2l.domain.order.exception.OrderNotFound;
+import com.in2l.domain.order.exception.OrderProductNotFound;
 import com.in2l.domain.order.repository.OrdersProductRepository;
 import com.in2l.domain.order.repository.OrdersRepository;
 import com.in2l.domain.product.domain.Product;
@@ -12,7 +14,9 @@ import com.in2l.domain.product.dto.request.ProductRequestDto;
 import com.in2l.domain.product.dto.response.ProductResponseDto;
 import com.in2l.domain.product.exception.ProductNotFound;
 import com.in2l.domain.product.repository.ProductRepository;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
@@ -34,18 +38,20 @@ public class OrderService {
     Order savedOrder = ordersRepository.findById(ordersId)
         .orElseThrow(() -> new OrderNotFound());
 
+    //TODO: delete flag 인건 빼고 get 해와야함.
+
     return OrderResponse.of(savedOrder).setMESSAGE("주문확인 완료.");
   }
 
   public OrderResponse postOrder(OrderRequest orderRequest) {
 
     //requestDTO에서 list를 받아옴.
-    List<ProductRequestDto> productList = orderRequest.getProductList();
+    List<ProductRequestDto> productList = orderRequest.getProducts();
 
     //3. requestDTO를 통해 order 생성
     Order savedOrder = ordersRepository.save(Order.of(orderRequest));
 
-    List<Long> productIds = productList.stream().map(p -> p.getProduct_id())
+    List<Long> productIds = productList.stream().map(p -> p.getProductId())
         .collect(Collectors.toList());
     List<Product> products = this.productRepository.findAllById(productIds);
     if (products.size() != productIds.size()) {
@@ -60,15 +66,15 @@ public class OrderService {
 
     List<ProductResponseDto> productResponseDtos = productList.stream()
         .map(p -> ProductResponseDto.builder()
-            .product_id(p.getProduct_id())
+            .productId(p.getProductId())
             .productName(p.getProductName())
             .buyCount(p.getBuyCount())
             .build()).collect(Collectors.toList());
 
     //프론트에 던져줄 OrderResponse = 1order + N Product
     OrderResponse ordersResponse = OrderResponse.builder()
-        .order_id(savedOrder.getOrder_id())
-        .shop_id(savedOrder.getShop_id())
+        .id(savedOrder.getId())
+        .shopId(savedOrder.getShopId())
         .orderStatus(savedOrder.getOrderStatus())
         .productResponseDtos(productResponseDtos)
         .MESSAGE("주문이 완료되었습니다.")
@@ -81,11 +87,42 @@ public class OrderService {
     Order savedOrder = ordersRepository.findById(ordersId)
         .orElseThrow(() -> new OrderNotFound());
 
-    ordersRepository.delete(savedOrder);
-
-    return OrderResponse.of(savedOrder).setMESSAGE("주문이 삭제되었습니다.");
+    return null;
   }
 }
+//
+//    //1. order_product delete flag
+//    //2. order에 delete flag
+//
+//    Long order_id = savedOrder.getOrder_id();
+//
+////    ordersProductRepository.findById(order_id);
+////
+////    Collection<OrderProduct> orderIds = ordersProductRepository.findByOrder_id(order_id); //이거 맞음??
+////
+////    System.out.println(orderIds);
+//
+//
+////        .orElseThrow(() -> new OrderProductNotFound());
+//
+////    System.out.println(products);
+//
+////    List<OrderProduct> orderProducts = products.stream().map(p -> OrderProduct.builder()
+////        .product(p)
+////        .order(savedOrder)
+////        .build()).collect(Collectors.toList());
+//
+////
+////    List<OrderProduct> product_ids = ordersProductRepository.findById(ordersId)
+////        .orElseThrow(() -> new OrderNotFound());
+//
+////    ordersRepository.delete(savedOrder);
+//
+//    return null;
+//
+////    return OrderResponse.of(savedOrder).setMESSAGE("주문이 삭제되었습니다.");
+//  }
+
 
 
 //    Orders savedOrders = createOrders(ordersRequest);
@@ -126,8 +163,8 @@ public class OrderService {
 //  private Order createOrder(OrderRequest orderRequest) {
 //
 //    Order order = Order.builder()
-//        .member_id(orderRequest.getMember_id())
-//        .memberName(orderRequest.getMemberName())
+//        .member_id(orderRequest.getId())
+//        .name(orderRequest.getname())
 //        .shop_id(orderRequest.getShop_id())
 //        .shopName(orderRequest.getShopName())
 //        .originPrice(orderRequest.getOriginPrice())

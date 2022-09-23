@@ -40,9 +40,9 @@ public class Product extends BaseTimeEntity {
    */
 
   @Id
-  @Column(name = "product_id")
+//  @Column(name = "product_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY) //기본 키 생성을 데이터베이스에 위임
-  private Long product_id;
+  private Long id;
 
 //  @JsonIgnore       //orderItems 에서 보고 있으므로 여기선 볼 필요가 없다.
 //  @ManyToOne(fetch = LAZY)
@@ -51,9 +51,9 @@ public class Product extends BaseTimeEntity {
 
   @JsonIgnore
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-  private List<OrderProduct> orderProductList = new ArrayList<>();
+  private List<OrderProduct> orderProducts = new ArrayList<>();
 
-  private Long shop_id;     //shop PK
+  private Long shopId;     //shop PK
 
   private String shopName;
 
@@ -72,11 +72,14 @@ public class Product extends BaseTimeEntity {
 
   private Long soldCount;
 
+  private boolean productDelete;
+
   @Builder
-  public Product(Long shop_id, String shopName, String productName, String productDesc,
-      Long amount, Long originPrice, Long discountPrice,
-      Currency currency, Long soldCount) {
-    this.shop_id = shop_id;
+  public Product(List<OrderProduct> orderProducts, Long shopId, String shopName,
+      String productName, String productDesc, Long amount, Long originPrice,
+      Long discountPrice, Currency currency, Long soldCount, boolean productDelete) {
+    this.orderProducts = orderProducts;
+    this.shopId = shopId;
     this.shopName = shopName;
     this.productName = productName;
     this.productDesc = productDesc;
@@ -85,7 +88,9 @@ public class Product extends BaseTimeEntity {
     this.discountPrice = discountPrice;
     this.currency = currency;
     this.soldCount = soldCount;
+    this.productDelete = productDelete;
   }
+
   /**
    * shopName    : String
    * productName   :String

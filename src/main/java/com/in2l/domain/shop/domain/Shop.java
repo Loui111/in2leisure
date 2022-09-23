@@ -1,9 +1,9 @@
 package com.in2l.domain.shop.domain;
 
 import com.in2l.global.common.domain.BaseTimeEntity;
+import com.in2l.global.common.domain.Categories;
 import com.in2l.global.common.domain.Country;
-import com.in2l.global.common.domain.SubTypes;
-import com.in2l.global.common.domain.Types;
+import com.in2l.global.common.domain.SubCategories;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -34,15 +34,15 @@ public class Shop extends BaseTimeEntity {
    */
 
   @Id
-  @Column(name = "shop_id")
+//  @Column(name = "shop_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long shop_id;
+  private Long id;
 
   @Enumerated(EnumType.STRING)
-  private Types types;      //TODO: category 로 바꿔야 할듯.
+  private Categories category;      //TODO: category 로 바꿔야 할듯.
 
   @Enumerated(EnumType.STRING)
-  private SubTypes subTypes;    //TODO: subCattegory로 바꿔야 할듯.
+  private SubCategories subCategory;    //TODO: subCattegory로 바꿔야 할듯.
 
   private String shopDesc;
 
@@ -58,10 +58,10 @@ public class Shop extends BaseTimeEntity {
   private float rankScore;
 
   @Builder
-  public Shop(Types types, SubTypes subTypes, String shopDesc,
+  public Shop(Categories category, SubCategories subCategory, String shopDesc,
       Country country, String frontImage, String contentImage, float reviewScore, float rankScore) {
-    this.types = types;
-    this.subTypes = subTypes;
+    this.category = category;
+    this.subCategory = subCategory;
     this.shopDesc = shopDesc;
     this.country = country;
     this.frontImage = frontImage;

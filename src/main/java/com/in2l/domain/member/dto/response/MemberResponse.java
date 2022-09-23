@@ -1,22 +1,40 @@
 package com.in2l.domain.member.dto.response;
 
+import com.in2l.domain.member.domain.GenderType;
 import com.in2l.domain.member.domain.Member;
+import java.time.LocalDateTime;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class MemberResponse {
 
-  private Long member_id;
+  private Long id;
   private String email;
-  private String memberName;
+  private String name;
+  private String phoneNumber;
+  private GenderType gender;      //TODO: 젠더 validation 도 필요함.
+  private LocalDateTime birthDay;
+  private String address;
+  private String profileImage;
+  private Boolean deleteFlag;
   private String MESSAGE;
 
   @Builder
-  public MemberResponse(Long member_id, String email, String memberName, String MESSAGE) {
-    this.member_id = member_id;
+  public MemberResponse(Long id, String email, String name, String phoneNumber,
+      GenderType gender, LocalDateTime birthDay, String address, String profileImage,
+      Boolean deleteFlag, String MESSAGE) {
+    this.id = id;
     this.email = email;
-    this.memberName = memberName;
+    this.name = name;
+    this.phoneNumber = phoneNumber;
+    this.gender = gender;
+    this.birthDay = birthDay;
+    this.address = address;
+    this.profileImage = profileImage;
+    this.deleteFlag = deleteFlag;
     this.MESSAGE = MESSAGE;
   }
 
@@ -26,9 +44,15 @@ public class MemberResponse {
 
   public static MemberResponse of(Member member) {
     MemberResponse memberResponse = MemberResponse.builder()
-        .member_id(member.getMember_id())
+        .id(member.getId())
         .email(member.getEmail())
-        .memberName(member.getMemberName())
+        .name(member.getName())
+        .phoneNumber(member.getPhoneNumber())
+        .gender(member.getGender())
+        .birthDay(member.getBirthDay())
+        .address(member.getAddress())
+        .profileImage(member.getProfileImage())
+        .deleteFlag(member.getDeleteFlag())
         .build();
 
     return memberResponse;

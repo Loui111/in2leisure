@@ -4,6 +4,8 @@ import com.in2l.domain.member.domain.Member;
 import com.in2l.domain.member.dto.request.MemberRequest;
 import com.in2l.domain.member.dto.response.MemberResponse;
 import com.in2l.domain.member.service.MemberService;
+import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +26,19 @@ public class MemberController {
 
   private final MemberService memberService;
 
-  @GetMapping("/{memberId}")
-  public MemberResponse getMember(@PathVariable Long memberId) {
-    return memberService.getMember(memberId);
+  @GetMapping("/{id}")
+  public MemberResponse getMember(@PathVariable Long id) {
+    return memberService.getMember(id);
+  }
+
+//  @GetMapping("")   //전체조회는 admin 에서나 쓸것. 그래도 겸사 겸사 만들어둠.
+//  public List<Member> getMembers() {
+//    return memberService.getMembers();
+//  }
+
+  @GetMapping("")   //전체조회는 admin 에서나 쓸것. 그래도 겸사 겸사 만들어둠.
+  public Optional<List<Member>> getMembersWithoutDelete() {
+    return memberService.getMembersWithoutDelete();
   }
 
   @PostMapping("")
@@ -34,16 +46,16 @@ public class MemberController {
     return memberService.postMember(memberRequest);
   }
 
-  @PatchMapping("/{memberId}")
+  @PatchMapping("/{id}")
   public MemberResponse patchMember(@RequestBody @Valid MemberRequest memberRequest,
-      @PathVariable Long memberId) {
+      @PathVariable Long id) {
 
-    return memberService.patchMember(memberRequest, memberId);
+    return memberService.patchMember(memberRequest, id);
   }
 
-  @DeleteMapping("/{memberId}")
-  public MemberResponse deleteMember(@PathVariable Long memberId) {
-    return memberService.deleteMember(memberId);
+  @DeleteMapping("/{id}")
+  public MemberResponse deleteMember(@PathVariable Long id) {
+    return memberService.deleteMember(id);
   }
 }
 

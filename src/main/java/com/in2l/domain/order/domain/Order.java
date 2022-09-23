@@ -40,18 +40,18 @@ public class Order extends BaseTimeEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "order_id")
-  private Long order_id;
+//  @Column(name = "id")
+  private Long id;
 
   @JsonIgnore
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-  private List<OrderProduct> orderProductList = new ArrayList<>();
+  private List<OrderProduct> orderProducts = new ArrayList<>();
 
-  private Long member_id;   //user의 PK
+  private Long memberId;   //user의 PK
 
   private String memberName;
 
-  private Long shop_id;   //shop의 PK임.
+  private Long shopId;   //shop의 PK임.
 
   private String shopName;
 
@@ -61,33 +61,37 @@ public class Order extends BaseTimeEntity {
 
   private float discountRate;
 
+  private boolean orderDelete;
+
   @Enumerated(EnumType.STRING)
   private Currency currency;
 
   @Enumerated(EnumType.STRING)
   private OrderStatus orderStatus;
 
+
   @Builder
-  public Order(List<OrderProduct> orderProductList, Long member_id, String memberName,
-      Long shop_id, String shopName, Long originPrice, Long discountPrice, float discountRate,
-      Currency currency, OrderStatus orderStatus) {
-    this.orderProductList = orderProductList;
-    this.member_id = member_id;
+  public Order(List<OrderProduct> orderProducts, Long memberId, String memberName,
+      Long shopId, String shopName, Long originPrice, Long discountPrice, float discountRate,
+      boolean orderDelete, Currency currency, OrderStatus orderStatus) {
+    this.orderProducts = orderProducts;
+    this.memberId = memberId;
     this.memberName = memberName;
-    this.shop_id = shop_id;
+    this.shopId = shopId;
     this.shopName = shopName;
     this.originPrice = originPrice;
     this.discountPrice = discountPrice;
     this.discountRate = discountRate;
+    this.orderDelete = orderDelete;
     this.currency = currency;
     this.orderStatus = orderStatus;
   }
 
-  public static Order of(OrderRequest orderRequest) {
+  public static Order of(OrderRequest orderRequest) {   //여기 products가 들어가야하지 않나?
     return Order.builder()
-        .member_id(orderRequest.getMember_id())
+        .memberId(orderRequest.getMemberId())
         .memberName(orderRequest.getMemberName())
-        .shop_id(orderRequest.getShop_id())
+        .shopId(orderRequest.getShopId())
         .shopName(orderRequest.getShopName())
         .originPrice(orderRequest.getOriginPrice())
         .discountPrice(orderRequest.getDiscountPrice())
@@ -101,6 +105,6 @@ public class Order extends BaseTimeEntity {
 //  }
 
   public void putOrderItems(OrderProduct orderProduct){
-    this.orderProductList.add(orderProduct);
+    this.orderProducts.add(orderProduct);
   }
 }

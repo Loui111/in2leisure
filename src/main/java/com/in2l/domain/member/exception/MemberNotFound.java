@@ -10,6 +10,10 @@ public class MemberNotFound extends In2Exception {
     super(MESSAGE);
   }
 
+  public MemberNotFound(Throwable cause){
+    super(MESSAGE, cause);
+  }
+
   @Override
   public int getStatusCode() {
     return 404;

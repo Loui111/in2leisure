@@ -9,15 +9,15 @@ import lombok.Getter;
 @Getter
 public class ProductResponseDto {
 
-  private Long product_id;
+  private Long productId;
 
   private String productName;
 
   private Long buyCount;
 
   @Builder
-  public ProductResponseDto(Long product_id, String productName, Long buyCount) {
-    this.product_id = product_id;
+  public ProductResponseDto(Long productId, String productName, Long buyCount) {
+    this.productId = productId;
     this.productName = productName;
     this.buyCount = buyCount;
   }

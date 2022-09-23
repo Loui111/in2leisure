@@ -2,6 +2,7 @@ package com.in2l.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.RequestEntity.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -64,10 +65,6 @@ class OrderControllerTest {
   @PersistenceContext
   private EntityManager entityManager;
 
-
-//  @Autowired
-//  private DatabaseCleanup databaseCleanup;
-
   @BeforeEach
   void DBClean1() {   //TODO: 테스크코드를 하나씩 하면 성공함. 한번에 하면 실패.
     ordersProductRepository.deleteAllInBatch();
@@ -82,7 +79,7 @@ class OrderControllerTest {
   }
 
   Long testMember_id = 1L;
-  String testMemberName = "고냥인";
+  String testName = "고냥인";
   Long testShop_id = 1L;
   String testShopName = "in2ShopSports";
   Long testOriginPrice = 20000L;
@@ -132,7 +129,7 @@ class OrderControllerTest {
         .contentType(MediaType.APPLICATION_JSON)
         .content(json))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.order_id").value(1L))
+        .andExpect(jsonPath("$.id").value(1L))
         .andExpect(jsonPath("$.productResponseDtos.[0].productName").value(testProductName1))
         .andExpect(jsonPath("$.productResponseDtos.[1].productName").value(testProductName2))
         .andDo(print());
@@ -152,7 +149,7 @@ class OrderControllerTest {
         .content(json));
 
     //then
-    mockMvc.perform(get("/v0/1/order/1")
+    mockMvc.perform(delete("/v0/1/order/1")
         .contentType(MediaType.APPLICATION_JSON)
         .content(json))
         .andExpect(status().isOk());
@@ -174,7 +171,7 @@ class OrderControllerTest {
 
     //then
 
-//    mockMvc.perform(patch("/v1/member/{memberId}", member1.getMember_id())
+//    mockMvc.perform(patch("/v1/member/{id}", member1.getId())
 //      .contentType(MediaType.APPLICATION_JSON)
 //        .content(objectMapper.writeValueAsString(memberRequest)))
 //        .andExpect(status().isOk());
@@ -182,7 +179,7 @@ class OrderControllerTest {
 
 
 //
-//    mockMvc.perform(patch("/v0/1/order/{member_id}", orderRequest.getMember_id())
+//    mockMvc.perform(patch("/v0/1/order/{member_id}", orderRequest.getId())
 //      .contentType(MediaType.APPLICATION_JSON)
 //        .content(json))
 //        .andExpect(status().isOk());
@@ -198,7 +195,7 @@ class OrderControllerTest {
     ProductGenerator();
 
     ProductRequestDto productRequestDto1 = ProductRequestDto.builder()
-        .product_id(savedProduct1.getProduct_id())
+        .productId(savedProduct1.getId())
         .productName(savedProduct1.getProductName())
         .productDesc(savedProduct1.getProductDesc())
         .buyCount(10L)
@@ -207,7 +204,7 @@ class OrderControllerTest {
         .build();
 
     ProductRequestDto productRequestDto2 = ProductRequestDto.builder()
-        .product_id(savedProduct2.getProduct_id())
+        .productId(savedProduct2.getId())
         .productName(savedProduct2.getProductName())
         .productDesc(savedProduct2.getProductDesc())
         .buyCount(5L)
@@ -220,16 +217,16 @@ class OrderControllerTest {
     productRequestDtos.add(productRequestDto2);
 
     return OrderRequest.builder()
-        .member_id(testMember_id)
-        .memberName(testMemberName)
-        .shop_id(testShop_id)
+        .memberId(testMember_id)
+        .memberName(testName)
+        .shopId(testShop_id)
         .shopName(testShopName)
         .originPrice(testOriginPrice)
         .discountPrice(testDiscountPrice)
         .discountRate(testDiscountRate)
         .currency(testCurrency)
         .orderStatus(testOrderStatus)
-        .productList(productRequestDtos)
+        .products(productRequestDtos)
         .build();
   }
 
@@ -240,7 +237,7 @@ class OrderControllerTest {
         .amount(100L)
         .discountPrice(10000L)
         .originPrice(120000L)
-        .shop_id(1L)
+        .shopId(1L)
         .shopName("그냥샵")
         .soldCount(100L)
         .build();
@@ -251,7 +248,7 @@ class OrderControllerTest {
         .amount(2000L)
         .discountPrice(10000L)
         .originPrice(120000L)
-        .shop_id(1L)
+        .shopId(1L)
         .shopName("그냥샵")
         .soldCount(100L)
         .build();

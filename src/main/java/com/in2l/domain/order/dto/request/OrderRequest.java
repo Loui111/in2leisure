@@ -19,7 +19,7 @@ public class OrderRequest {
 
   /**
    * member_id        :Long
-   * memberName       :String
+   * name       :String
    * shop_id        :Long
    * shopName     :String
    * originPrice    :Long
@@ -31,13 +31,13 @@ public class OrderRequest {
 
 //  private List<ProductRequestDto> productList = new ArrayList<>();
   @NotBlank
-  private Long member_id;   //user의 PK
+  private Long memberId;   //user의 PK
 
   private String memberName;
 
-  private List<ProductRequestDto> productList;
+  private List<ProductRequestDto> products;
 
-  private Long shop_id;   //shop의 PK임.
+  private Long shopId;   //shop의 PK임.
 
   private String shopName;
 
@@ -53,20 +53,15 @@ public class OrderRequest {
   @Enumerated(EnumType.STRING)
   private OrderStatus orderStatus;
 
-  //TODO: 없어야 함. ??먼소리야? 왜 없어야해? Getter라서?
-//  public List<ProductRequestDto> getProductList(){
-//    return productList;
-//  }
-
   @Builder
-  public OrderRequest(@NotBlank Long member_id, String memberName,
-      List<ProductRequestDto> productList, Long shop_id, String shopName, Long originPrice,
+  public OrderRequest(@NotBlank Long memberId, String memberName,
+      List<ProductRequestDto> products, Long shopId, String shopName, Long originPrice,
       Long discountPrice, float discountRate, Currency currency,
       OrderStatus orderStatus) {
-    this.member_id = member_id;
+    this.memberId = memberId;
     this.memberName = memberName;
-    this.productList = productList;
-    this.shop_id = shop_id;
+    this.products = products;
+    this.shopId = shopId;
     this.shopName = shopName;
     this.originPrice = originPrice;
     this.discountPrice = discountPrice;

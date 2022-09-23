@@ -27,7 +27,7 @@ class MemberServiceTest {
   /**
    * @email            :String
    * @password     :String
-   * @memberName    :String
+   * @name    :String
    * phoneNumber  :String? Int?
    * gender         :ENUM
    * birthDay        :DateTime
@@ -37,7 +37,7 @@ class MemberServiceTest {
 
   String testEmail = "test@gmail.com";
   String testPassword = "Password123!@#";
-  String testMembername = "고냥인";
+  String testName = "고냥인";
   String testPhoneNumber = "0108811234";
   GenderType testGender = GenderType.MALE;
   LocalDateTime testBirthDay = LocalDateTime.now();
@@ -50,17 +50,17 @@ class MemberServiceTest {
 //    //given
 //    Member member = Member.builder()
 //        .email(testEmail)
-//        .memberName(testMembername)
+//        .name(testname)
 //        .password(testPassword)
 //        .build();
 //
 //    Member savedMember = memberRepository.save(member);
 //
 //    //when
-//    MemberResponse memberResponse = memberService.getMember(savedMember.getMember_id());
+//    MemberResponse memberResponse = memberService.getMember(savedMember.getId());
 //
 //    //then
-//    Assertions.assertEquals(memberResponse.getMember_id(), savedMember.getMember_id());
+//    Assertions.assertEquals(memberResponse.getId(), savedMember.getId());
 //  }
 //
 //  @Test
@@ -72,7 +72,7 @@ class MemberServiceTest {
 //    MemberRequest memberRequest = MemberRequest.builder()
 //        .email(testEmail)
 //        .password(testPassword)
-//        .memberName(testMembername)
+//        .name(testname)
 //        .gender(testGender)
 //        .birthDay(testBirthDay)
 //        .address(testAddress)
@@ -84,7 +84,7 @@ class MemberServiceTest {
 //
 //    //then
 //    Assertions.assertNotNull(member1);
-//    Assertions.assertEquals(testMembername, member1.getMemberName());
+//    Assertions.assertEquals(testname, member1.getname());
 //    Assertions.assertEquals(testEmail, member1.getEmail());
 //  }
 //
@@ -97,7 +97,7 @@ class MemberServiceTest {
 //    MemberRequest memberRequest = MemberRequest.builder()
 //        .email(testEmail)
 //        .password("8901")
-//        .memberName(testMembername)
+//        .name(testname)
 //        .gender(testGender)
 //        .birthDay(testBirthDay)
 //        .address(testAddress)
@@ -109,7 +109,7 @@ class MemberServiceTest {
 //
 //    //then
 //    Assertions.assertNotNull(member1);
-//    Assertions.assertEquals(testMembername, member1.getMemberName());
+//    Assertions.assertEquals(testname, member1.getname());
 //    Assertions.assertEquals(testEmail, member1.getEmail());
 //  }
 }

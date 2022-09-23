@@ -34,8 +34,8 @@ public class OrderController {
     return ordersResponse;
   }
 
-  @DeleteMapping("/{ordersId}")
-  public OrderResponse deleteOrder(@PathVariable Long ordersId){
-    return orderService.deleteOrder(ordersId);
-  }
+//  @DeleteMapping("/{ordersId}")
+//  public OrderResponse deleteOrder(@PathVariable Long ordersId){
+//    return orderService.deleteOrder(ordersId);
+//  }
 }

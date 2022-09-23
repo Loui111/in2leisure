@@ -10,11 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ProductRequestDto {
-//  private Long shop_id;     //shop PK
-//
-//  private String shopName;
-
-  private Long product_id;
+  private Long productId;
 
   private String productName;
 
@@ -29,13 +25,11 @@ public class ProductRequestDto {
   @Enumerated(EnumType.STRING)
   private Currency currency;
 
-//  private Long soldCount;
-
   @Builder
-  public ProductRequestDto(Long product_id, String productName, String productDesc,
+  public ProductRequestDto(Long productId, String productName, String productDesc,
       Long buyCount, Long originPrice, Long discountPrice,
       Currency currency) {
-    this.product_id = product_id;
+    this.productId = productId;
     this.productName = productName;
     this.productDesc = productDesc;
     this.buyCount = buyCount;

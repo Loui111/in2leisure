@@ -56,7 +56,7 @@ class OrderControllerTest {
 
   /**
    * member_id        :Long
-   * memberName       :String
+   * name       :String
    * shop_id        :Long
    * shopName     :String
    * originPrice    :Long
@@ -67,7 +67,7 @@ class OrderControllerTest {
    */
 
   Long testMember_id = 1L;
-  String testMemberName = "고냥인";
+  String testname = "고냥인";
   Long testShop_id = 1L;
   String testShopName = "in2ShopSports";
   Long testOriginPrice = 20000L;
@@ -143,7 +143,7 @@ class OrderControllerTest {
 //    OrderRequest orderRequest = OrderRequest.builder()
 //        .productList(productRequestDtoList)
 //        .member_id(testMember_id)
-//        .memberName(testMemberName)
+//        .name(testname)
 //        .shop_id(testShop_id)   //shop_id는 product에서 가져와야하나?
 //        .shopName(testShopName)
 //        .originPrice(testOriginPrice)
@@ -156,8 +156,8 @@ class OrderControllerTest {
 //    String orderJson = objectMapper.writeValueAsString(orderRequest);
 //
 ////    Orders orders = Orders.builder()
-////        .member_id(ordersRequest.getMember_id())
-////        .memberName(ordersRequest.getMemberName())
+////        .member_id(ordersRequest.getId())
+////        .name(ordersRequest.getname())
 ////        .shop_id(ordersRequest.getShop_id())
 ////        .shopName(ordersRequest.getShopName())
 ////        .originPrice(ordersRequest.getOriginPrice())

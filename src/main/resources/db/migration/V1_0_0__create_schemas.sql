@@ -67,7 +67,7 @@
 --    member_id     INTEGER NOT NULL AUTO_INCREMENT primary key,
 --    email         varchar(255),
 --    password      varchar(255),
---    memberName    varchar(255),
+--    name    varchar(255),
 --    phoneNumber   varchar(255),
 --    gender        varchar(255),
 --    birthDay      DATE,
@@ -79,7 +79,7 @@
 --(
 --    orders_id     INTEGER NOT NULL AUTO_INCREMENT primary key,
 --    member_id     INTEGER,
---    memberName    varchar(255),
+--    name    varchar(255),
 --    shop_id       varchar(255),
 --    shopName      varchar(255),
 --    originPrice   INTEGER,
@@ -93,7 +93,7 @@
 --(
 --    orders_id     INTEGER NOT NULL AUTO_INCREMENT primary key,
 --    member_id     INTEGER,
---    memberName    varchar(255),
+--    name    varchar(255),
 --    shop_id       varchar(255),
 --    shopName      varchar(255),
 --    originPrice   INTEGER,
