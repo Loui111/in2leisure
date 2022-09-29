@@ -7,7 +7,10 @@ import java.util.Optional;
 public interface MemberRepositoryCustom {
   //  List<Member> getMember();
   Member findByName(String name);
+
   Optional<Member> findByIdWithDeleteFlagFalse(Long id);
 
   Optional<List<Member>> findAllWithoutDelete();
+
+  Optional<List<Member>> findAllWithDeleteFlagOnly();
 }

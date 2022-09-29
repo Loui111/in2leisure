@@ -25,6 +25,8 @@ public class OrderResponse {
 
   private Long shopId;   //shop의 PK임.
 
+  private boolean deleteFlag;
+
   private String MESSAGE;
 
   @Enumerated(EnumType.STRING)
@@ -33,15 +35,17 @@ public class OrderResponse {
   @Builder
   public OrderResponse(Long id,
       List<ProductResponseDto> productResponseDtos, Long memberId, Long shopId,
-      String MESSAGE, OrderStatus orderStatus) {
+      boolean deleteFlag, String MESSAGE, OrderStatus orderStatus) {
     this.id = id;
     this.productResponseDtos = productResponseDtos;
     this.memberId = memberId;
     this.shopId = shopId;
+    this.deleteFlag = deleteFlag;
     this.MESSAGE = MESSAGE;
     this.orderStatus = orderStatus;
   }
 
+  //TODO: 요딴걸 허용해야 하는지??
   public OrderResponse setMESSAGE(String MESSAGE) {
     this.MESSAGE = MESSAGE;
     return null;
@@ -53,6 +57,7 @@ public class OrderResponse {
         .memberId(order.getId())
         .shopId(order.getShopId())
         .orderStatus(order.getOrderStatus())
+        .deleteFlag(order.isDeleteFlag())
         .build();
 
     return orderResponse;

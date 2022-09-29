@@ -1,21 +1,21 @@
 package com.in2l.domain.order.dto.request;
 
 import com.in2l.domain.order.domain.OrderStatus;
-import com.in2l.domain.product.domain.Product;
 import com.in2l.domain.product.dto.request.ProductRequestDto;
 import com.in2l.global.common.domain.Currency;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
-@NoArgsConstructor
-public class OrderRequest {
+@ToString
+public class OrderEdit {
+
+  private Long id;
 
   private Long memberId;   //user의 PK
 
@@ -42,10 +42,11 @@ public class OrderRequest {
   private OrderStatus orderStatus;
 
   @Builder
-  public OrderRequest(Long memberId, String memberName,
+  public OrderEdit(Long id, Long memberId, String memberName,
       List<ProductRequestDto> products, Long shopId, String shopName, Long originPrice,
       Long discountPrice, float discountRate, boolean deleteFlag,
       Currency currency, OrderStatus orderStatus) {
+    this.id = id;
     this.memberId = memberId;
     this.memberName = memberName;
     this.products = products;
@@ -58,5 +59,20 @@ public class OrderRequest {
     this.currency = currency;
     this.orderStatus = orderStatus;
   }
-}
 
+  public static OrderEdit of(OrderRequest orderRequest) {
+    return OrderEdit.builder()
+        .memberId(orderRequest.getMemberId())
+        .memberName(orderRequest.getMemberName())
+//        .products(orderRequest.getProducts())
+        .shopId(orderRequest.getShopId())
+        .shopName(orderRequest.getShopName())
+        .originPrice(orderRequest.getOriginPrice())
+        .discountPrice(orderRequest.getDiscountPrice())
+        .discountRate(orderRequest.getDiscountRate())
+        .currency(orderRequest.getCurrency())
+        .orderStatus(orderRequest.getOrderStatus())
+        .deleteFlag(orderRequest.isDeleteFlag())
+        .build();
+  }
+}

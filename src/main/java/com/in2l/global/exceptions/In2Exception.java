@@ -1,4 +1,4 @@
-package com.in2l.global.error;
+package com.in2l.global.exceptions;
 
 import java.util.HashMap;
 import java.util.Map;

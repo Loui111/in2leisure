@@ -2,7 +2,9 @@ package com.in2l.domain.order.service;
 
 import com.in2l.domain.member.exception.MemberNotFound;
 import com.in2l.domain.order.domain.Order;
+import com.in2l.domain.order.domain.OrderEditor;
 import com.in2l.domain.order.domain.OrderProduct;
+import com.in2l.domain.order.dto.request.OrderEdit;
 import com.in2l.domain.order.dto.request.OrderRequest;
 import com.in2l.domain.order.dto.response.OrderResponse;
 import com.in2l.domain.order.exception.OrderNotFound;
@@ -34,13 +36,37 @@ public class OrderService {
 
   private final ProductRepository productRepository;
 
-  public OrderResponse getOrder(Long ordersId) {
-    Order savedOrder = ordersRepository.findById(ordersId)
+  public OrderResponse getOrder(Long id) {
+    Order savedOrder = ordersRepository.findById(id)
         .orElseThrow(() -> new OrderNotFound());
 
     //TODO: delete flag 인건 빼고 get 해와야함.
 
-    return OrderResponse.of(savedOrder).setMESSAGE("주문확인 완료.");
+    List<OrderProduct> orderProducts = savedOrder.getOrderProducts();
+
+//    List<ProductResponseDto> productResponseDtos = orderProducts.stream().map(p -> ProductResponseDto.builder()
+//        .productId(p.getProduct().getId())
+//        .productName(p.getProduct().getProductName())
+//        .build()
+//    ).collect(Collectors.toList());
+
+    List<OrderProduct> orderProducts1 = savedOrder.getOrderProducts();
+
+//    savedOrder.orderProducts.get(1)
+
+//    orderProducts.stream().map(p -> ProductResponseDto.builder()
+//        .productId(p.getProduct().getId())
+//        .productName(p.getProduct().getProductName())
+//    )
+
+    return OrderResponse.builder()
+        .id(savedOrder.getId())
+        .memberId(savedOrder.getMemberId())
+        .shopId(savedOrder.getShopId())
+        .orderStatus(savedOrder.getOrderStatus())
+        .productResponseDtos(null)
+        .MESSAGE("주문이 완료되었습니다.")
+        .build();
   }
 
   public OrderResponse postOrder(OrderRequest orderRequest) {
@@ -77,19 +103,35 @@ public class OrderService {
         .shopId(savedOrder.getShopId())
         .orderStatus(savedOrder.getOrderStatus())
         .productResponseDtos(productResponseDtos)
+        .deleteFlag(savedOrder.isDeleteFlag())
         .MESSAGE("주문이 완료되었습니다.")
         .build();
 
     return ordersResponse;
   }
 
-  public OrderResponse deleteOrder(Long ordersId) {
-    Order savedOrder = ordersRepository.findById(ordersId)
+  public OrderResponse patchOrder(OrderRequest orderRequest, Long id) {
+    Order originOrder = ordersRepository.findById(id)
         .orElseThrow(() -> new OrderNotFound());
 
-    return null;
+    OrderEditor.of(originOrder.toEditor(), originOrder);
+    Order patchedOrder = ordersRepository.save(originOrder);
+
+    OrderResponse orderResponse = OrderResponse.of(patchedOrder);
+    if(orderRequest.isDeleteFlag() == true){
+      orderResponse.setMESSAGE("Order: " + orderResponse.getId() + " 의 delete가 처리되었습니다.");
+    }else {
+      orderResponse.setMESSAGE("Order가 갱신되었습니다.");
+    }
+
+    return orderResponse;
+  }
+
+  public void deleteOrder(Long id){
+    ordersRepository.deleteById(id);
   }
 }
+
 //
 //    //1. order_product delete flag
 //    //2. order에 delete flag
@@ -122,7 +164,6 @@ public class OrderService {
 //
 ////    return OrderResponse.of(savedOrder).setMESSAGE("주문이 삭제되었습니다.");
 //  }
-
 
 
 //    Orders savedOrders = createOrders(ordersRequest);

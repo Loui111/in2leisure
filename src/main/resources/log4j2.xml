@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+
+  <!-- 해당 설정파일에서 사용하는 프로퍼티-->
+  <!-- 여기 참고:: https://veneas.tistory.com/entry/Spring-Boot-%EC%8A%A4%ED%94%84%EB%A7%81-%EB%B6%80%ED%8A%B8-%EB%A1%9C%EA%B7%B8-%EC%84%A4%EC%A0%95-log4j2 -->
+  <Properties>
+    <property name="LOGS_PATH">logs</property>
+  </Properties>
+
+  <Appenders>
+    <!-- 콘솔 -->
+    <Console name="console" target="SYSTEM_OUT">
+      <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] %-5level %logger{35} - %msg%n" />
+    </Console>
+
+    <!-- 파일 -->
+    <RollingFile name ="RollingFile">
+      <FileName>${LOGS_PATH}/log4j2.log</FileName>
+      <FilePattern>${LOGS_PATH}/log4j2.%d{yyyy-MM-dd}.%i.log.gz</FilePattern>
+      <PatternLayout>
+        <Pattern>%d{yyyy-MM-dd HH:mm:ss} %5p [%c] %m%n</Pattern>
+      </PatternLayout>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="100MB"/>
+        <TimeBasedTriggeringPolicy interval = "1" modulate = "true"/>
+      </Policies>
+    </RollingFile>
+  </Appenders>
+
+  <Loggers>
+    <!-- Application Loggers -->
+    <!-- Root 보다 우선 순위가 높습니다. -->
+    <logger name="com.test.api.controller" level="INFO" additivity="false">
+      <AppenderRef ref="console" />
+      <AppenderRef ref="RollingFile" />
+    </logger>
+
+    <logger name="com.test.api.service" level="INFO" additivity="false">
+      <AppenderRef ref="console" />
+      <AppenderRef ref="RollingFile" />
+    </logger>
+
+    <!-- FATAL, ERROR, WARN, INFO, DEBUG, TRACE -->
+    <Root level="INFO">
+      <AppenderRef ref="console" />
+      <AppenderRef ref="RollingFile" />
+    </Root>
+  </Loggers>
+</Configuration>

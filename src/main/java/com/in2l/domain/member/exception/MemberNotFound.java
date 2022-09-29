@@ -1,6 +1,6 @@
 package com.in2l.domain.member.exception;
 
-import com.in2l.global.error.In2Exception;
+import com.in2l.global.exceptions.In2Exception;
 
 public class MemberNotFound extends In2Exception {
 
@@ -12,10 +12,10 @@ public class MemberNotFound extends In2Exception {
 
   public MemberNotFound(Throwable cause){
     super(MESSAGE, cause);
-  }
+  }   //이건 언제?? new exception 할때??
 
   @Override
   public int getStatusCode() {
-    return 404;
+    return 400;
   }
 }

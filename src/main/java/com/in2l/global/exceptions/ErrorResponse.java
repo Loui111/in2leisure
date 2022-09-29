@@ -1,4 +1,4 @@
-package com.in2l.domain.member.dto.response;
+package com.in2l.global.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

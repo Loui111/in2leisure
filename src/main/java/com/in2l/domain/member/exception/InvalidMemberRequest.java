@@ -1,6 +1,6 @@
 package com.in2l.domain.member.exception;
 
-import com.in2l.global.error.In2Exception;
+import com.in2l.global.exceptions.In2Exception;
 
 public class InvalidMemberRequest extends In2Exception {
 
@@ -24,6 +24,6 @@ public class InvalidMemberRequest extends In2Exception {
 
   @Override
   public int getStatusCode() {
-    return 404;   //404가 맞으려나??
+    return 400;   //404가 맞으려나??
   }
 }

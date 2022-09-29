@@ -1,6 +1,8 @@
 package com.in2l.domain.order.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.in2l.domain.order.domain.OrderEditor.OrderEditorBuilder;
+import com.in2l.domain.order.dto.request.OrderEdit;
 import com.in2l.domain.order.dto.request.OrderRequest;
 import com.in2l.global.common.domain.BaseTimeEntity;
 import com.in2l.global.common.domain.Currency;
@@ -20,23 +22,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "orders")   //'order'는 RDB예약어라 쓸수 없음.
+@DynamicInsert    //deleteFlat의 default값을 제대로 넣으려면 이게 선언되어 있어야함.
 public class Order extends BaseTimeEntity {
-
-  /**
-   * member_id        :Long
-   * shop_id        :Long
-   * shopName     :String
-   * originPrice    :Long
-   * discountPrice: Long
-   * discountRate : float
-   * currency        :ENUM
-   * orderStatus    : ENUM
-   */
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,7 +54,9 @@ public class Order extends BaseTimeEntity {
 
   private float discountRate;
 
-  private boolean orderDelete;
+  @Column(columnDefinition= "bit default false")
+//  @NotBlank   TODO: 이건 null 이면 안되고, 디폴트로 false로 넣어야 한다는건데 이런게 가능?
+  private boolean deleteFlag;     //TODO: 근데 왠지 delete바뀐 날짜는 어딘가 박아 넣어야 할듯? (개인정보이슈?)
 
   @Enumerated(EnumType.STRING)
   private Currency currency;
@@ -69,11 +64,10 @@ public class Order extends BaseTimeEntity {
   @Enumerated(EnumType.STRING)
   private OrderStatus orderStatus;
 
-
   @Builder
   public Order(List<OrderProduct> orderProducts, Long memberId, String memberName,
       Long shopId, String shopName, Long originPrice, Long discountPrice, float discountRate,
-      boolean orderDelete, Currency currency, OrderStatus orderStatus) {
+      boolean deleteFlag, Currency currency, OrderStatus orderStatus) {
     this.orderProducts = orderProducts;
     this.memberId = memberId;
     this.memberName = memberName;
@@ -82,7 +76,7 @@ public class Order extends BaseTimeEntity {
     this.originPrice = originPrice;
     this.discountPrice = discountPrice;
     this.discountRate = discountRate;
-    this.orderDelete = orderDelete;
+    this.deleteFlag = deleteFlag;
     this.currency = currency;
     this.orderStatus = orderStatus;
   }
@@ -98,6 +92,7 @@ public class Order extends BaseTimeEntity {
         .discountRate(orderRequest.getDiscountRate())
         .currency(orderRequest.getCurrency())
         .orderStatus(orderRequest.getOrderStatus())
+//        .deleteFlag(orderRequest.ge)
         .build();
   }
 
@@ -106,5 +101,36 @@ public class Order extends BaseTimeEntity {
 
   public void putOrderItems(OrderProduct orderProduct){
     this.orderProducts.add(orderProduct);
+  }
+
+  public OrderEditor.OrderEditorBuilder toEditor() {
+    OrderEditor.OrderEditorBuilder builder = OrderEditor.builder()
+//        .orderProducts(orderProducts)
+        .memberId(memberId)
+        .memberName(memberName)
+        .shopId(shopId)
+        .shopName(shopName)
+        .originPrice(originPrice)
+        .discountPrice(discountPrice)
+        .discountRate(discountRate)
+        .currency(currency)
+        .deleteFlag(deleteFlag)
+        .orderStatus(orderStatus);
+
+    return builder;
+  }
+
+  public void edit(OrderEdit orderEdit) {
+//    orderProducts = orderEdit.getProducts();  //이거 넣으려면 orderProducts.of(orderProductRequest)를 만들어야함. 귀찮..
+    memberId = orderEdit.getMemberId();
+    memberName = orderEdit.getMemberName();
+    shopId = orderEdit.getShopId();
+    shopName = orderEdit.getShopName();
+    originPrice = orderEdit.getOriginPrice();
+    discountPrice = orderEdit.getDiscountPrice();
+    discountRate = orderEdit.getDiscountRate();
+    currency = orderEdit.getCurrency();
+    orderStatus = orderEdit.getOrderStatus();
+    deleteFlag = orderEdit.isDeleteFlag();
   }
 }

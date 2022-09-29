@@ -30,13 +30,13 @@ public class MemberEditor {
 
   private String profileImage;
 
-  private Boolean deleteFlag;
+  private boolean deleteFlag;
 
   @Builder    //.build() 가 없음.
   public MemberEditor(@NotBlank String email,
       @NotBlank String password, @NotBlank String name, String phoneNumber,
       GenderType gender, LocalDateTime birthDay, String address, String profileImage,
-      Boolean deleteFlag) {
+      boolean deleteFlag) {
     this.email = email;
     this.password = password;
     this.name = name;
@@ -49,7 +49,8 @@ public class MemberEditor {
   }
 
   public static MemberEditor of(MemberEditorBuilder memberEditorBuilder, Member originMember) {
-    return memberEditorBuilder.email(originMember.getEmail())
+    return memberEditorBuilder
+        .email(originMember.getEmail())
         .password(originMember.getPassword())
         .name(originMember.getName())
         .phoneNumber(originMember.getPhoneNumber())
@@ -57,7 +58,7 @@ public class MemberEditor {
         .birthDay(originMember.getBirthDay())
         .address(originMember.getAddress())
         .profileImage(originMember.getProfileImage())
-        .deleteFlag(originMember.getDeleteFlag())
+        .deleteFlag(originMember.isDeleteFlag())
         .build();
   }
 }

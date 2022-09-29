@@ -1,6 +1,6 @@
 package com.in2l.domain.order.exception;
 
-import com.in2l.global.error.In2Exception;
+import com.in2l.global.exceptions.In2Exception;
 
 public class OrderProductNotFound extends In2Exception {
 

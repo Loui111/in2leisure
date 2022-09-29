@@ -13,6 +13,14 @@ spring:
     username: in2l_developer
     password: yP1#^Y#6f3r6B1g
 
+logging:
+  level:
+    root: "info"
+    org.springframework.web: "debug"
+    org.hibernate: "error"
+
+apiVersion: "/api/v0"
+
 #  flyway:
 #    enabled: true
 #    baseline-on-migrate: true

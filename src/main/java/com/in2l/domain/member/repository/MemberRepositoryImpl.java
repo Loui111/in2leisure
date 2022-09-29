@@ -33,4 +33,10 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         .where(QMember.member.deleteFlag.eq(Boolean.FALSE))
         .fetch());
   }
+
+  public Optional<List<Member>> findAllWithDeleteFlagOnly(){
+    return Optional.ofNullable((jpaQueryFactory.selectFrom(QMember.member)
+        .where(QMember.member.deleteFlag.eq(Boolean.FALSE))
+        .fetch()));
+  }
 }

@@ -2,7 +2,6 @@ package com.in2l.controller;
 
 import com.in2l.domain.member.domain.Member;
 import com.in2l.domain.member.dto.request.MemberRequest;
-import com.in2l.domain.member.dto.response.MemberResponse;
 import com.in2l.domain.member.service.MemberService;
 import java.util.List;
 import java.util.Optional;
@@ -21,43 +20,44 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping(value = "/v0/member")
+@RequestMapping(value = "${apiVersion}/member")
 public class MemberController {
 
   private final MemberService memberService;
 
   @GetMapping("/{id}")
-  public MemberResponse getMember(@PathVariable Long id) {
+  public Object getMember(@PathVariable Long id){
     return memberService.getMember(id);
   }
 
-//  @GetMapping("")   //전체조회는 admin 에서나 쓸것. 그래도 겸사 겸사 만들어둠.
-//  public List<Member> getMembers() {
-//    return memberService.getMembers();
-//  }
-
-  @GetMapping("")   //전체조회는 admin 에서나 쓸것. 그래도 겸사 겸사 만들어둠.
-  public Optional<List<Member>> getMembersWithoutDelete() {
-    return memberService.getMembersWithoutDelete();
-  }
-
   @PostMapping("")
-  public MemberResponse postMember(@RequestBody @Valid MemberRequest memberRequest) {
+  public Object postMember(@RequestBody @Valid MemberRequest memberRequest) throws Exception{
+    memberRequest.NameValidation();
     return memberService.postMember(memberRequest);
   }
 
-  @PatchMapping("/{id}")
-  public MemberResponse patchMember(@RequestBody @Valid MemberRequest memberRequest,
-      @PathVariable Long id) {
-
+  @PatchMapping("/{id}")      //delete도 patch 로 퉁친다.
+  public Object patchMember(@RequestBody @Valid MemberRequest memberRequest, @PathVariable Long id){
+    memberRequest.NameValidation();
     return memberService.patchMember(memberRequest, id);
   }
 
-  @DeleteMapping("/{id}")
-  public MemberResponse deleteMember(@PathVariable Long id) {
+  @DeleteMapping("/{id}")     //진짜 'delete'는 안쓸 예정.
+  public boolean deleteMember(@PathVariable Long id) throws Exception {
     return memberService.deleteMember(id);
   }
+
+  @GetMapping("")   //전체조회는 admin 에서나 쓸것. 그래도 겸사 겸사 만들어둠.
+  public Optional<List<Member>> getMembersWithDeleteFalseOnly() {
+    return memberService.getMembersWithDeleteFalseOnly();
+  }
+
+  public List<Member> getAllMembers() {
+    return memberService.getAllMembers();
+  }
+
 }
+
 
 //  @PostMapping("/posts")
 //  public void post(@RequestBody @Valid PostCreate request){

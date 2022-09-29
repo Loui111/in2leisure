@@ -1,17 +1,14 @@
 package com.in2l.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.http.RequestEntity.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.in2l.domain.order.domain.Order;
 import com.in2l.domain.order.domain.OrderStatus;
 import com.in2l.domain.order.dto.request.OrderRequest;
 import com.in2l.domain.order.repository.OrdersProductRepository;
@@ -21,11 +18,8 @@ import com.in2l.domain.product.domain.Product;
 import com.in2l.domain.product.dto.request.ProductRequestDto;
 import com.in2l.domain.product.repository.ProductRepository;
 import com.in2l.global.common.domain.Currency;
-import com.in2l.global.util.DatabaseCleanup;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,14 +28,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({"test"})
+@Transactional
 class OrderControllerTest {
 
   @Autowired
@@ -65,7 +60,9 @@ class OrderControllerTest {
   @PersistenceContext
   private EntityManager entityManager;
 
+
   @BeforeEach
+//  @AfterEach
   void DBClean1() {   //TODO: 테스크코드를 하나씩 하면 성공함. 한번에 하면 실패.
     ordersProductRepository.deleteAllInBatch();
     productRepository.deleteAllInBatch();
@@ -73,9 +70,13 @@ class OrderControllerTest {
 
 //    databaseCleanup.execute();
 
-//    entityManager.createNativeQuery("TRUNCATE TABLE order_product").executeUpdate();
-//    entityManager.createNativeQuery("TRUNCATE TABLE orders").executeUpdate();
-//    entityManager.createNativeQuery("TRUNCATE TABLE product").executeUpdate();
+//    ALTER TABLE " + tableName + " ALTER COLUMN ID RESTART WITH 1").executeUpdate();
+    //entityManager.createNativeQuery("ALTER TABLE " + tableName + " ALTER COLUMN ID RESTART WITH 1").executeUpdate();
+    //        }
+
+    entityManager.createNativeQuery("ALTER TABLE order_product AUTO_INCREMENT 1").executeUpdate();
+    entityManager.createNativeQuery("ALTER TABLE orders AUTO_INCREMENT 1").executeUpdate();
+    entityManager.createNativeQuery("ALTER TABLE product AUTO_INCREMENT 1").executeUpdate();
   }
 
   Long testMember_id = 1L;
@@ -106,26 +107,26 @@ class OrderControllerTest {
     String json = objectMapper.writeValueAsString(orderRequest);
 
     //when    //어차피 1post가 정상이어야 동작함.
-    mockMvc.perform(post("/v0/1/order")
+    mockMvc.perform(post("/api/v0/1/order")
         .contentType(MediaType.APPLICATION_JSON)
         .content(json));
 
     //then
-    mockMvc.perform(get("/v0/1/order/1")
+    mockMvc.perform(get("/api/v0/1/order/1")
         .contentType(MediaType.APPLICATION_JSON)
         .content(json))
         .andExpect(status().isOk());
   }
 
   @Test
-  @DisplayName("Shop에서 2개의제품 구매")
+  @DisplayName("Shop에서 2개의 제품 구매")
   void Orders2ProductsFrom1Shop() throws Exception {
 
     OrderRequest orderRequest = OrderGenerator();   //2개 제품 order request
 
     String json = objectMapper.writeValueAsString(orderRequest);
 
-    mockMvc.perform(post("/v0/1/order")
+    mockMvc.perform(post("/api/v0/1/order")
         .contentType(MediaType.APPLICATION_JSON)
         .content(json))
         .andExpect(status().isOk())
@@ -144,12 +145,12 @@ class OrderControllerTest {
     String json = objectMapper.writeValueAsString(orderRequest);
 
     //when    //어차피 1post가 정상이어야 동작함.
-    mockMvc.perform(post("/v0/1/order")
+    mockMvc.perform(post("/api/v0/1/order")
         .contentType(MediaType.APPLICATION_JSON)
         .content(json));
 
     //then
-    mockMvc.perform(delete("/v0/1/order/1")
+    mockMvc.perform(delete("/api/v0/1/order/1")
         .contentType(MediaType.APPLICATION_JSON)
         .content(json))
         .andExpect(status().isOk());
@@ -157,6 +158,7 @@ class OrderControllerTest {
 
   @Test
   @DisplayName("order1개를 patch. (근데 어차피 post를 먼저 수행함)")
+  @Transactional
   void patchOrder1() throws Exception{
 
     //Given
@@ -165,30 +167,72 @@ class OrderControllerTest {
     String json = objectMapper.writeValueAsString(orderRequest);
 
     //when    //어차피 1post가 정상이어야 동작함.
-    mockMvc.perform(post("/v0/1/order")
+    mockMvc.perform(post("/api/v0/1/order")
         .contentType(MediaType.APPLICATION_JSON)
         .content(json));
 
     //then
+    OrderRequest newOrderRequest = OrderRequest.builder()
+        .memberId(testMember_id)
+        .memberName(testName)
+        .shopId(testShop_id)
+        .shopName(testShopName)
+        .originPrice(testOriginPrice)
+        .discountPrice(30000L)
+        .discountRate(testDiscountRate)
+        .currency(testCurrency)
+        .orderStatus(OrderStatus.PAID)    //갱신.
+//        .products(productRequestDtos)
+        .build();
 
-//    mockMvc.perform(patch("/v1/member/{id}", member1.getId())
-//      .contentType(MediaType.APPLICATION_JSON)
-//        .content(objectMapper.writeValueAsString(memberRequest)))
-//        .andExpect(status().isOk());
+    mockMvc.perform(patch("/api/v0/1/order/{id}", 1)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(newOrderRequest)))
+        .andExpect(jsonPath("$.message").value("Order가 갱신되었습니다."))
+        .andExpect(jsonPath("$.orderStatus").value("PAID"))   //OrderStatus.PAID 이게 외않되?
+        .andExpect(status().isOk())
+        .andDo(print());
   }
 
+  @Test
+  @DisplayName("order1개의 deleteFlag를 update")
+  @Transactional
 
-//
-//    mockMvc.perform(patch("/v0/1/order/{member_id}", orderRequest.getId())
-//      .contentType(MediaType.APPLICATION_JSON)
-//        .content(json))
-//        .andExpect(status().isOk());
+  void updateDeleteFlagOrder() throws Exception{
 
-//
-//    mockMvc.perform(patch("/v0/1/order/1")
-//        .contentType(MediaType.APPLICATION_JSON)
-//        .content(json))
-//        .andExpect(status().isOk());
+    //Given
+    OrderRequest orderRequest = OrderGenerator();   //2개 제품 order request
+
+    String json = objectMapper.writeValueAsString(orderRequest);
+
+    mockMvc.perform(post("/api/v0/1/order")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json));
+
+    //when
+    OrderRequest newOrderRequest = OrderRequest.builder()
+        .memberId(testMember_id)
+        .memberName(testName)
+        .shopId(testShop_id)
+        .shopName(testShopName)
+        .originPrice(testOriginPrice)
+        .discountPrice(testDiscountPrice)
+        .discountRate(testDiscountRate)
+        .currency(testCurrency)
+        .orderStatus(OrderStatus.PAID)    //갱신.
+        .deleteFlag(true)
+//        .products(productRequestDtos)
+        .build();
+
+    //then
+    mockMvc.perform(patch("/api/v0/1/order/{id}", 1)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(newOrderRequest)))
+//        .andExpect(jsonPath("deleteFlag").value("true"))
+        .andExpect(jsonPath("message").value("Order: 1 의 delete가 처리되었습니다."))
+        .andExpect(jsonPath("id").value(1L))   //여기가 핵심. id가 변경되면 안된다..andExpect(status().isOk())
+        .andDo(print());
+  }
 
 
   private OrderRequest OrderGenerator() {
