@@ -6,6 +6,7 @@ Java / Spring main branch.
 
 ## 20221221
 DDD 및 백엔드 설계중
+https://app.diagrams.net/#G1Gl2I5xyrrt7Z9n8Sf-F1olwcFaH7cyvI
 
 ## 20230124
 Cloud Native 로 전환을 위해 잠시 대기중
